@@ -8,7 +8,6 @@ import time
 import sys
 import getopt
 
-
 import server
 import monitor
 from core import file
@@ -16,7 +15,7 @@ import config
 
 def generateVectors( ):
     # 生成第一个VECTOR样本
-    vector_init = config.MOR_END_VECTOR_TEMPLET.replace("%MOR_WEBSOCKET_SERVER%", config.MOR_WEBSOCKET_SERVER, 1)
+    vector_init = config.MOR_INIT_VECTOR_TEMPLET.replace("%MOR_WEBSOCKET_SERVER%", config.MOR_WEBSOCKET_SERVER, 1)
     vector_init = vector_init.replace("%MOR_CURRENT_HREF%", "0", 1)
     next = "%s%s" % ("1", config.MOR_FUZZER_SUFFIX)
     vector_init = vector_init.replace("%MOR_NEXT_HREF%", next, 1)
@@ -50,11 +49,11 @@ def generateVectors( ):
 def pre_fuzz():
     # 防止浏览器进程不结束导致Vectors生成失败
     config.TerminateProc()
-    # 生成每次Fuzz使用的Vectors向量
+    # 生成每次Fuzz使用的Vectors样本
     if generateVectors() is False:
         config.logging_exception('G', "Generate vectors is failed.")
         return
-    # 遍历所有Vectors向量
+    # 遍历所有Vectors样本
     vector_i = 0
     config.MOR_LAST_COMPLETE_VECOTR = -1
     while vector_i < config.MOR_PRE_VECTORS_NUM:
@@ -88,27 +87,16 @@ def morph():
     while 1:
         pre_fuzz()
 
-def usage():
-    config.morph_signals()
-    print('Morph usage:')
-    print('  -b,--browser:    Select which browser,contains IE, FF, CM, etc.')
-    print('  -f,--fuzzer:     Select which fuzzer to use.')
-    print('  -d,--debugger:   Select which debugger monitor uses, contains WerFault, windbg, gdb, etc.')
-    print('                   This parameter is optional, default is WerFault.')
-    print('  -h,--help:       help message.')
-    print('For example:')
-    print('  morph --browser=IE --fuzzer=nduja.html')
-    print('  morph --browser=IE --fuzzer=simple --debugger=windbg')
-
 if __name__ == "__main__":
     try:
         opts, args = getopt.getopt(sys.argv[1:], "hb:f:d:", ["help","browser=", "fuzzer=", "debugger="])
     except getopt.GetoptError:
-        usage()
+        config.morph_usage()
         sys.exit()
     browser = ''
     fuzzer = ''
     debugger = ''
+    # 1.获取运行参数
     for name, value in opts:
         if name in ('-b', '--browser'):
             browser = value
@@ -117,15 +105,24 @@ if __name__ == "__main__":
         elif name in ('-d', '--debugger'):
             debugger = value
         else:
-            usage()
+            config.morph_usage()
             sys.exit()
-    if len(debugger) <= 0:
-        debugger = "WerFault"
-    fuzzer_path = os.path.join(config.MOR_FUZZERS_FOLDER, fuzzer)
-    if browser not in config.MOR_BROWSERS.keys() or debugger not in config.MOR_DEBUGGERS.keys() \
-            or len(fuzzer) <= 0 or os.path.exists(fuzzer_path) is False :
-        usage()
+    # 2.若参数中没有Debugger则设置为默认的
+    dbg_keys = list(config.MOR_DEBUGGERS[config.MOR_SYSTEM].keys())
+    browser_keys = list(config.MOR_BROWSERS[config.MOR_SYSTEM].keys())
+    if len(dbg_keys) <= 0 or len(browser_keys) <= 0:
+        config.morph_signals()
+        config.logging_exception('C', "MOR_BROWSER or MOR_DEBUGGER is not found in config.py.")
         sys.exit()
+    if len(debugger) <= 0:
+        debugger = dbg_keys[0]
+    # 3.判断运行参数是否合理
+    fuzzer_path = os.path.join(config.MOR_FUZZERS_FOLDER, fuzzer)
+    fuzzer_exist = os.path.exists(fuzzer_path)
+    if browser not in browser_keys or debugger not in dbg_keys or len(fuzzer) <= 0 or fuzzer_exist is False :
+        config.morph_usage()
+        sys.exit()
+    # 4.运行Fuzz主进程
     config.MOR_BROWSER_NICK = browser
     config.MOR_FUZZER_NICK = fuzzer
     config.MOR_DEBUGGER_NICK = debugger

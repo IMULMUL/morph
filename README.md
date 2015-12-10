@@ -34,15 +34,15 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, 
 
 > morph -b IE -f nduja.html
 
-默认Debugger采用WerFault.exe判断。
+监控器进程根据config.py中设置的默认异常进程判断是否发生Crash。
 
 2.如果Fuzzer插件包括html模板和其它文档，可以指定某个目录作为Fuzzer插件：
 
 > morph --browser=FF --fuzzer=simple
 
-程序会默认simple/simple.html作为Fuzzer插件主模板，其它将一同拷贝至样本目录以供调用。
+程序会将simple目录下的simple.html作为Fuzzer插件模板，其余文件被拷贝至样本目录以供调用。
 
-3.除使用默认的WerFault.exe作为异常进程外，也可以选择Windbg作为Debugger异常调试器：
+3.除使用默认的WerFault.exe作为异常进程外，也可以选择Windbg作为Debugger即时调试器：
 
 > morph --browser=FF --fuzzer=nduja.html --debugger=windbg
 
@@ -50,25 +50,24 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, 
 
 > cdb.exe -iaec "-logo c:/log.txt -c \"!load msec.dll;!exploitable -v;\""
 
-该命令中的c:/log.txt必须与config.py中MOR_DEBUGGERS对应的log参数保持一致。
-!load msec.dll;!exploitable -v命令用于判断漏洞样本的可利用性，在正确使用该命令之前需要从微软网站上下载MSECExtensions !exploitable插件。
+设置默认即时调试器的作用时，当浏览器进程发生崩溃时，会调用cdb.exe并执行上面的命令，其中!load msec.dll;!exploitable -v命令用于判断漏洞样本的可利用性。必须保证该命令中的c:/log.txt与config.py中MOR_DEBUGGERS对应的log参数一致。
 
 > 将MSEC.dll拷贝至windbg/winext目录，并在windbg中提前测试load msec.dll是否成功。
-若出现Can't Load Library错误，则需要安装Visual C++ Redistributable 2008/2012。
+若出现Can't Load Library错误，则需要安装Visual C++ Redistributable 2008/2012运行时环境。
 
-4.提前开启目标浏览器进程的页堆调试，会大大提高Fuzz精确度。因为很多堆异常默认情况下并不是在出错时立即出发异常，而设置页堆调试功能后，这种情况会得到很好的改善。比如IE浏览器：
+4.在Fuzz之前需要开启目标浏览器进程的页堆调试功能，比如IE浏览器：
 
 > gflags.exe /i iexplore.exe +hpa
 
 5.如果Fuzz目标是Firefox，则需要关闭安全模式。
-> 在firefox进入about:config找到toolkit.startup.max_resumed_crashes（默认是3），将其设置为-1即可
+> 在firefox进入about:config找到toolkit.startup.max_resumed_crashes（默认是3），将其设置为-1即可。
 
 # Versions
 
 * v0.2.2
 	* 优化了Fuzzer插件读取策略，能够支持Fuzzer目录作为插件
 	* 优化监控器逻辑，使得不安装Windbg也可以进行Fuzz
-
+	* 更改了Browser和Debugger相关参数的跨平台特性
 * v0.2.1
 	* 优化了Fuzzer插件的编写格式，将其分为morph_random、morph_fuzz和morph_notify_href三部分
 	* 解决了连续两个样本存在Crash时Morph序号读取死循环的错误
@@ -89,15 +88,13 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, 
 
 # Others
 
-1.如何取消cdb.exe作为默认即时调试器？
+如果设置了cdb.exe作为系统默认的即时调试器，若后续想采用WerFault.exe的监控方法，需要提前取消之前的即时设置。
 
-删除注册表以下两个位置的Debugger 和Auto键值：
+取消cdb.exe默认即时调试器的方法：将注册表以下两个位置的Debugger 和Auto键值删除。
 
-x86
-> HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AeDebug
+> x86：HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AeDebug
 
-x64
-> HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\AeDebug
+> x64： HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\AeDebug
 
 ------
 

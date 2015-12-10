@@ -28,7 +28,7 @@ def handle_crash_proc( ):
     crash_num_name = "%d%s" % (crash_num, config.MOR_FUZZER_SUFFIX)
     vectorCrashPath = os.path.join(config.MOR_VECTORS_FOLDER, crash_num_name)
     # 读取log信息
-    debuggerLogPath = config.MOR_DEBUGGERS[config.MOR_DEBUGGER_NICK]['log']
+    debuggerLogPath = config.MOR_DEBUGGERS[config.MOR_SYSTEM][config.MOR_DEBUGGER_NICK]['log']
     crashHash = GetCrashHash(debuggerLogPath)
     # 保存当前样本和当前log
     dstCrashPath = os.path.join(config.MOR_CRASHES_FOLDER, crashHash + config.MOR_FUZZER_SUFFIX)
@@ -40,7 +40,7 @@ def handle_crash_proc( ):
 
 # 将多重循环封装为函数 用Return跳出多重循环分支
 def monitor_crash_proc( ):
-    monitor_proc = config.MOR_DEBUGGERS[config.MOR_DEBUGGER_NICK]['proc']
+    monitor_proc = config.MOR_DEBUGGERS[config.MOR_SYSTEM][config.MOR_DEBUGGER_NICK]['proc']
     while True:
         if config.MOR_LAST_COMPLETE_VECOTR >= config.MOR_PRE_VECTORS_NUM-1:
             config.MOR_MONITOR_RUNNING = False
