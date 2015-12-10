@@ -50,9 +50,9 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, 
 
 > cdb.exe -iaec "-logo c:/log.txt -c \"!load msec.dll;!exploitable -v;\""
 
-设置默认即时调试器的作用时，当浏览器进程发生崩溃时，会调用cdb.exe并执行上面的命令，其中!load msec.dll;!exploitable -v命令用于判断漏洞样本的可利用性。必须保证该命令中的c:/log.txt与config.py中MOR_DEBUGGERS对应的log参数一致。
+设置默认即时调试器的作用时，当浏览器进程发生崩溃时，会调用cdb.exe并执行上面的命令。必须保证该命令中的c:/log.txt与config.py中MOR_DEBUGGERS对应的log参数一致。另外!load msec.dll;!exploitable -v命令用于判断漏洞样本的可利用性。
 
-> 将MSEC.dll拷贝至windbg/winext目录，并在windbg中提前测试load msec.dll是否成功。
+> 安装!exploitable：将MSEC.dll拷贝至windbg/winext目录，并在windbg中提前测试load msec.dll是否成功。
 若出现Can't Load Library错误，则需要安装Visual C++ Redistributable 2008/2012运行时环境。
 
 4.在Fuzz之前需要开启目标浏览器进程的页堆调试功能，比如IE浏览器：
