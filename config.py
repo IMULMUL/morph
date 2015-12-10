@@ -16,7 +16,7 @@ MOR_VECTORS_FOLDER = "vector"
 MOR_FUZZER_SUFFIX = ".html"
 MOR_DBGLOG_SUFFIX = ".log"
 
-MOR_PRE_VECTORS_NUM = 50
+MOR_PRE_VECTORS_NUM = 150
 MOR_RANDOM_ARRAY_LENGTH = 10000
 MOR_MAX_RANDOM_NUMBER = 1000
 MOR_WEBSOCKET_SERVER = "127.0.0.1:8080"
@@ -42,13 +42,17 @@ MOR_BROWSERS = {
     },
 }
 
-MOR_DEBUGGER = {
-    "Windows": {
+MOR_DEBUGGERS = {
+    "WerFault": {
+        'proc': "WerFault.exe",
+        'path': "C:/Windows/System32/WerFault.exe",
+        'log': "",
+    },
+    "windbg": {
         'proc': "cdb.exe",
-        'args': "",
         'path': "C:/Program Files (x86)/Debugging Tools for Windows (x86)/cdb.exe",
         'log': "C:/log.txt",
-    }
+    },
 }
 
 # configs which Do not recommend changes
@@ -57,9 +61,9 @@ MOR_MONITOR_RUNNING = False
 
 MOR_FUZZER_NICK = ""
 MOR_BROWSER_NICK = ""
+MOR_DEBUGGER_NICK = ""
 MOR_FUZ_VECTOR_TEMPLET = ""
 MOR_END_VECTOR_TEMPLET = ""
-MOR_PLATFORM = platform.system()
 
 # Some global functions to call
 def morph_signals():
@@ -75,8 +79,8 @@ def morph_signals():
     ''')
 
 def TerminateProc( ):
-    while psutil.exist_process(MOR_DEBUGGER[MOR_PLATFORM]['proc']):
-        psutil.kill_process(MOR_DEBUGGER[MOR_PLATFORM]['proc'])
+    while psutil.exist_process(MOR_DEBUGGERS[MOR_DEBUGGER_NICK]['proc']):
+        psutil.kill_process(MOR_DEBUGGERS[MOR_DEBUGGER_NICK]['proc'])
         time.sleep(1)
     while psutil.exist_process(MOR_BROWSERS[MOR_BROWSER_NICK]['fault']):
         psutil.kill_process(MOR_BROWSERS[MOR_BROWSER_NICK]['fault'])
@@ -94,11 +98,11 @@ def LoadBrowserProc(vector):
 def InitFuzzArgs():
     global MOR_FUZ_VECTOR_TEMPLET, MOR_END_VECTOR_TEMPLET
     # 检查Browser程序和Debugger是否存在
-    b_if = os.path.exists(MOR_DEBUGGER[MOR_PLATFORM]['path'])
+    b_if = os.path.exists(MOR_DEBUGGERS[MOR_DEBUGGER_NICK]['path'])
     d_if = os.path.exists(MOR_BROWSERS[MOR_BROWSER_NICK]['path'])
     if not b_if or not d_if:
         logging_exception('I', "Browser %s or Debugger %s module is not found, plz recheck."
-                          % (MOR_DEBUGGER[MOR_PLATFORM]['path'], MOR_BROWSERS[MOR_BROWSER_NICK]['path']))
+                          % (MOR_DEBUGGERS[MOR_DEBUGGER_NICK]['path'], MOR_BROWSERS[MOR_BROWSER_NICK]['path']))
         sys.exit()
     # 检查Crashes和Vectors文件夹是否存在 不存在就创建
     if not os.path.exists(MOR_CRASHES_FOLDER):
@@ -113,16 +117,27 @@ def InitFuzzArgs():
         except:
             logging_exception('I', "Could not delete folder:%s." % MOR_VECTORS_FOLDER)
             sys.exit()
-    try:
-        os.makedirs(MOR_VECTORS_FOLDER)
-    except:
-        logging_exception('I', "Could not create folder:%s." % MOR_VECTORS_FOLDER)
+    # 检查Fuzzer插件和init.morph配置文件是否存在 并读取模板
+    fuzzer = os.path.join(MOR_FUZZERS_FOLDER, MOR_FUZZER_NICK)
+    if os.path.isdir(fuzzer) is True:
+        if file.CopyDirFromSrcToDst(fuzzer, MOR_VECTORS_FOLDER) is False:
+            logging_exception('I', "Could not copy folder:%s to %s." % (fuzzer, MOR_VECTORS_FOLDER))
+            sys.exit()
+        fuzzer_path = os.path.join(fuzzer, MOR_FUZZER_NICK + MOR_FUZZER_SUFFIX)
+    elif os.path.isfile(fuzzer) is True:
+        fuzzer_path = fuzzer
+        try:
+            os.makedirs(MOR_VECTORS_FOLDER)
+        except:
+            logging_exception('I', "Could not create folder:%s." % MOR_VECTORS_FOLDER)
+            sys.exit()
+    else:
+        logging_exception('I', "Can not find %s in path %s." % (MOR_FUZZER_NICK, MOR_FUZZERS_FOLDER))
         sys.exit()
-    # 检查Fuzzer插件和zend.morph配置文件是否存在 并读取模板
-    MOR_FUZ_VECTOR_TEMPLET = file.ReadFromFile(os.path.join(MOR_FUZZERS_FOLDER, MOR_FUZZER_NICK))
+    MOR_FUZ_VECTOR_TEMPLET = file.ReadFromFile(fuzzer_path)
     MOR_END_VECTOR_TEMPLET = file.ReadFromFile(os.path.join(MOR_FUZZERS_FOLDER, 'init.morph'))
     if len(MOR_FUZ_VECTOR_TEMPLET) <= 0 or len(MOR_END_VECTOR_TEMPLET) <= 0:
-        logging_exception('I', "Read fuzzer:%s or zend.morph from %s is failed." % (MOR_FUZZER_NICK, MOR_FUZZERS_FOLDER))
+        logging_exception('I', "Read fuzzer:%s or init.morph from %s is failed." % (MOR_FUZZER_NICK, MOR_FUZZERS_FOLDER))
         sys.exit()
     logging_info('I', "Loaded fuzzer:%s and inint.morph." % MOR_FUZZER_NICK)
 

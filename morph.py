@@ -91,32 +91,42 @@ def morph():
 def usage():
     config.morph_signals()
     print('Morph usage:')
-    print('  -b,--browser:  Select which browser,contains IE FF CM etc.')
-    print('  -f,--fuzzer:   Select which fuzzer to use.')
-    print('  -h,--help:     help message.')
+    print('  -b,--browser:    Select which browser,contains IE, FF, CM, etc.')
+    print('  -f,--fuzzer:     Select which fuzzer to use.')
+    print('  -d,--debugger:   Select which debugger monitor uses, contains WerFault, cdb, gdb, etc.')
+    print('                   This parameter is optional.')
+    print('  -h,--help:       help message.')
     print('For example:')
     print('  morph --browser=IE --fuzzer=nduja.html')
+    print('  morph --browser=IE --fuzzer=simple --debugger=windbg')
 
 if __name__ == "__main__":
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hb:f:", ["help","browser=", "fuzzer="])
+        opts, args = getopt.getopt(sys.argv[1:], "hb:f:d:", ["help","browser=", "fuzzer=", "debugger="])
     except getopt.GetoptError:
         usage()
         sys.exit()
     browser = ''
     fuzzer = ''
+    debugger = ''
     for name, value in opts:
         if name in ('-b', '--browser'):
             browser = value
         elif name in ('-f', '--fuzzer'):
             fuzzer = value
+        elif name in ('-d', '--debugger'):
+            debugger = value
         else:
             usage()
             sys.exit()
+    if len(debugger) <= 0:
+        debugger = "WerFault"
     fuzzer_path = os.path.join(config.MOR_FUZZERS_FOLDER, fuzzer)
-    if browser not in config.MOR_BROWSERS or len(fuzzer) <=0 or os.path.exists(fuzzer_path) is False:
+    if browser not in config.MOR_BROWSERS.keys() or debugger not in config.MOR_DEBUGGERS.keys() \
+            or len(fuzzer) <= 0 or os.path.exists(fuzzer_path) is False :
         usage()
         sys.exit()
     config.MOR_BROWSER_NICK = browser
     config.MOR_FUZZER_NICK = fuzzer
+    config.MOR_DEBUGGER_NICK = debugger
     morph()

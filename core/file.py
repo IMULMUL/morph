@@ -37,3 +37,11 @@ def SaveFileFromSrcToDst(src, dst):
         return True
     except:
         return False
+
+def CopyDirFromSrcToDst(src, dst):
+    # 拷贝目录
+    try:
+        shutil.copytree(src, dst)
+        return True
+    except:
+        return False
