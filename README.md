@@ -1,8 +1,6 @@
 # About
 
-Morph is an open source browser fuzzing framework written by Walkerfuz of Taurus Security.
-
-It provides an automated way to fuzz a browser, like IE, Firefox, Chrome, etc.
+Morph is an open source browser fuzzing framework written by Walkerfuz of Taurus Security.It provides an automated way to fuzz a browser, like IE, Firefox, Chrome, etc.
 
 You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz.
 
@@ -11,13 +9,13 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz.
 * 支持多种浏览器，例如IE、Chrome、Firefox等
 * 支持自定义扩展插件，比如nduja、fileja、cross_fuz
 
-### Requirements
+# Requirements
 
 * Python >= 3.4
 * Windbg
 * Current only for Windows
 
-### Installation and Usage
+# Installation and Usage
 
 1.安装Windbgx86/x64和MSECExtensions !exploitable插件。
 
@@ -42,7 +40,7 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz.
 6.运行：
 > morph.py --browser=IE --fuzzer=nduja.html
 
-### Versions Timeline
+# Versions
 
 * v0.2.1
 	* 优化了Fuzzer插件的编写格式，将其分为morph_random、morph_fuzz和morph_notify_href三部分
@@ -62,7 +60,7 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz.
 * v0.1.0
 	* 解决了浏览器标签页无响应阻塞Fuzz循环继续进行的bug
 
-### Others
+# Others
 
 1.如何取消cdb.exe作为默认即时调试器？
 
@@ -74,5 +72,6 @@ x86
 x64
 > HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\AeDebug
 
+------
 
 如果有什么bug或建议，请邮件联系@walkerfuz。
