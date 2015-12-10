@@ -6,8 +6,8 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, 
 
 # Features
 
-    * 支持多种浏览器，例如IE、Chrome、Firefox等
-    * 支持自定义扩展插件，比如nduja、fileja、cross_fuz等
+* 支持多种浏览器，例如IE、Chrome、Firefox等
+* 支持自定义扩展插件，比如nduja、fileja、cross_fuz等
 
 # Requirements
 
@@ -20,31 +20,29 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, 
 
 # Usages
 
-'''
-Morph usage:
-  -b,--browser:    Select which browser,contains IE, FF, CM, etc.
-  -f,--fuzzer:     Select which fuzzer to use.
-  -d,--debugger:   Select which debugger monitor uses, contains WerFault, cdb, gdb, etc.
-                   This parameter is optional.
-  -h,--help:       help message.
-For example:
-  morph --browser=IE --fuzzer=nduja.html
-  morph --browser=FF --fuzzer=simple --debugger=windbg
-'''
+	Morph usage:
+	  -b,--browser:    Select which browser,contains IE, FF, CM, etc.
+	  -f,--fuzzer:     Select which fuzzer to use.
+	  -d,--debugger:   Select which debugger monitor uses, contains WerFault, cdb, gdb, etc.
+					   This parameter is optional.
+	  -h,--help:       help message.
+	For example:
+	  morph --browser=IE --fuzzer=nduja.html
+	  morph --browser=FF --fuzzer=simple --debugger=windbg
 
-1. 默认情况下，可以下载Morph直接运行：
+1.默认情况下，可以下载Morph直接运行：
 
 > morph -b IE -f nduja.html
 
 默认Debugger采用WerFault.exe判断。
 
-2. 如果Fuzzer插件包括html模板和其它文档，可以指定某个目录作为Fuzzer插件：
+2.如果Fuzzer插件包括html模板和其它文档，可以指定某个目录作为Fuzzer插件：
 
 > morph --browser=FF --fuzzer=simple
 
 程序会默认simple/simple.html作为Fuzzer插件主模板，其它将一同拷贝至样本目录以供调用。
 
-3. 除使用默认的WerFault.exe作为异常进程外，也可以选择Windbg作为Debugger异常调试器：
+3.除使用默认的WerFault.exe作为异常进程外，也可以选择Windbg作为Debugger异常调试器：
 
 > morph --browser=FF --fuzzer=nduja.html --debugger=windbg
 
@@ -58,11 +56,11 @@ For example:
 > 将MSEC.dll拷贝至windbg/winext目录，并在windbg中提前测试load msec.dll是否成功。
 若出现Can't Load Library错误，则需要安装Visual C++ Redistributable 2008/2012。
 
-4. 提前开启目标浏览器进程的页堆调试，会大大提高Fuzz精确度。因为很多堆异常默认情况下并不是在出错时立即出发异常，而设置页堆调试功能后，这种情况会得到很好的改善。比如IE浏览器：
+4.提前开启目标浏览器进程的页堆调试，会大大提高Fuzz精确度。因为很多堆异常默认情况下并不是在出错时立即出发异常，而设置页堆调试功能后，这种情况会得到很好的改善。比如IE浏览器：
 
 > gflags.exe /i iexplore.exe +hpa
 
-5. 如果Fuzz目标是Firefox，则需要关闭安全模式。
+5.如果Fuzz目标是Firefox，则需要关闭安全模式。
 > 在firefox进入about:config找到toolkit.startup.max_resumed_crashes（默认是3），将其设置为-1即可
 
 # Versions
@@ -103,4 +101,4 @@ x64
 
 ------
 
-如果有什么bug或建议，请邮件联系@walkerfuz。
+如果有什么bug或建议，请邮件联系walkerfuz@outlook.com。
