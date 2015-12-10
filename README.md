@@ -13,8 +13,8 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, 
 
 * Required
     * Python >= 3.4
-    * IE9+, Firefox6+, Chrome14+, etc.
-    * Current only for Windows x86 or x64 system.
+    * IE9+, Firefox6+, Chrome14+, etc
+    * Current only for Windows x86 or x64 system
 * Optional
     * Windbg and !exploitable plug-in
 
@@ -23,7 +23,7 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, 
 	Morph usage:
 	  -b,--browser:    Select which browser,contains IE, FF, CM, etc.
 	  -f,--fuzzer:     Select which fuzzer to use.
-	  -d,--debugger:   Select which debugger monitor uses, contains WerFault, cdb, gdb, etc.
+	  -d,--debugger:   Select which debugger monitor uses, contains WerFault, windbg, gdb, etc.
 					   This parameter is optional.
 	  -h,--help:       help message.
 	For example:

@@ -75,7 +75,7 @@ def morph_signals():
          \_/  \/  \_/\____/\_/   \_/   \_/  /_/
 
   By Walkerfuz of Taurus Security(github.com/walkerfuz)
-                                  Morph - Version 0.2.1
+                                  Morph - Version 0.2.2
     ''')
 
 def TerminateProc( ):
