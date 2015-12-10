@@ -62,4 +62,17 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz.
 * v0.1.0
 	* 解决了浏览器标签页无响应阻塞Fuzz循环继续进行的bug
 
+### Others
+
+1.如何取消cdb.exe作为默认即时调试器？
+
+删除注册表以下两个位置的Debugger 和Auto键值：
+
+x86
+> HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AeDebug
+
+x64
+> HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\AeDebug
+
+
 如果有什么bug或建议，请邮件联系@walkerfuz。
