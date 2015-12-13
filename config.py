@@ -5,7 +5,6 @@ import platform
 import os
 import time
 import sys
-import shutil
 
 from core import psutil, file
 
@@ -59,11 +58,13 @@ MOR_DEBUGGERS = {
             'proc': "WerFault.exe",
             'path': "C:/Windows/System32/WerFault.exe",
             'log': "",
+            'property': "default",  # 当不指定debugger时默认采用的
         },
         "windbg": {
             'proc': "cdb.exe",
             'path': "C:/Program Files (x86)/Debugging Tools for Windows (x86)/cdb.exe",
             'log': "C:/log.txt",
+            "property": "",
         },
     },
     "Linux": {
@@ -71,6 +72,7 @@ MOR_DEBUGGERS = {
             'proc': "gdb",
             'path': "/usr/bin/gdb",
             'log': "",
+            "property": "default",  # 当不指定debugger时默认采用的
         },
     },
 }
@@ -96,7 +98,7 @@ def morph_signals():
          \_/  \/  \_/\____/\_/   \_/   \_/  /_/
 
   By Walkerfuz of Taurus Security(github.com/walkerfuz)
-                                  Morph - Version 0.2.2
+                                  Morph - Version 0.2.3
     ''')
 
 def morph_usage():
@@ -133,34 +135,46 @@ def LoadBrowserProc(vector):
 
 def InitFuzzArgs():
     global MOR_FUZ_VECTOR_TEMPLET, MOR_INIT_VECTOR_TEMPLET
-    # 检查Browser程序和Debugger是否存在
+    global MOR_VECTORS_FOLDER, MOR_CRASHES_FOLDER
+    # 1.检查Browser程序和Debugger是否存在
     b_path = MOR_BROWSERS[MOR_SYSTEM][MOR_BROWSER_NICK]['path']
     d_path = MOR_DEBUGGERS[MOR_SYSTEM][MOR_DEBUGGER_NICK]['path']
     if not os.path.exists(b_path) or not os.path.exists(d_path):
         logging_exception('I', "Browser %s or Debugger %s module is not found." % (b_path, d_path))
         sys.exit()
-    # 检查Crashes目录是否存在，不存在就创建
+    # 2.检查Crashes目录是否存在，不存在就创建
     if not os.path.exists(MOR_CRASHES_FOLDER) and file.CreateFolder(MOR_CRASHES_FOLDER) is False:
         logging_exception('I', "Could not create folder:%s." % MOR_CRASHES_FOLDER)
         sys.exit()
-    # 检查Vectors目录是否存在，存在就清空
+    # 3.检查Vectors目录是否存在，存在就先删除后创建，不存在就创建
     if os.path.exists(MOR_VECTORS_FOLDER) and file.DeleteFolder(MOR_VECTORS_FOLDER) is False:
         logging_exception('I', "Could not delete folder:%s." % MOR_VECTORS_FOLDER)
         sys.exit()
-    # 检查Fuzzer插件和init.morph配置文件是否存在 并读取模板
+    if file.CreateFolder(MOR_VECTORS_FOLDER) is False:
+        logging_exception('I', "Could not create folder:%s." % MOR_VECTORS_FOLDER)
+        sys.exit()
+    # 4.检查Fuzzer插件和init.morph配置文件是否存在 并读取模板
     f_path = os.path.join(MOR_FUZZERS_FOLDER, MOR_FUZZER_NICK)
+    # (1)若Fuzzer插件是目录形式，则将该目录拷贝至VECTOR和CRASH目录
     if os.path.isdir(f_path) is True:
-        if file.CopyDirFromSrcToDst(f_path, MOR_VECTORS_FOLDER) is False:
-            logging_exception('I', "Could not copy folder:%s to %s." % (f_path, MOR_VECTORS_FOLDER))
+        vector_fuzzer_path = os.path.join(MOR_VECTORS_FOLDER, MOR_FUZZER_NICK)
+        crash_fuzzer_path = os.path.join(MOR_CRASHES_FOLDER, MOR_FUZZER_NICK)
+        if file.CopyDirFromSrcToDst(f_path, vector_fuzzer_path) is False \
+                or file.CopyDirFromSrcToDst(f_path, crash_fuzzer_path) is False:
+            logging_exception('I', "Could not copy folder:%s to %s or %s." % (f_path, vector_fuzzer_path, crash_fuzzer_path))
             sys.exit()
+        # Fuzzer目录下的FuzzerNick.SUFFIX即为Fuzzer的主模板
         f_path = os.path.join(f_path, MOR_FUZZER_NICK + MOR_FUZZER_SUFFIX)
+        # 重新设置CRASHES和VECTORS目录
+        MOR_VECTORS_FOLDER = os.path.join(MOR_VECTORS_FOLDER, MOR_FUZZER_NICK)
+        MOR_CRASHES_FOLDER = os.path.join(MOR_CRASHES_FOLDER, MOR_FUZZER_NICK)
+    # (2)若Fuzzer插件是文件形式，则不作预处理
     elif os.path.isfile(f_path) is True:
-        if file.CreateFolder(MOR_VECTORS_FOLDER) is False:
-            logging_exception('I', "Could not create folder:%s." % MOR_VECTORS_FOLDER)
-            sys.exit()
+        pass
     else:
         logging_exception('I', "Can not find %s in path %s." % (MOR_FUZZER_NICK, MOR_FUZZERS_FOLDER))
         sys.exit()
+    # 5.读取Fuzzer模板和Init.morph模板
     MOR_FUZ_VECTOR_TEMPLET = file.ReadFromFile(f_path)
     MOR_INIT_VECTOR_TEMPLET = file.ReadFromFile(os.path.join(MOR_FUZZERS_FOLDER, 'init.morph'))
     if len(MOR_FUZ_VECTOR_TEMPLET) <= 0 or len(MOR_INIT_VECTOR_TEMPLET) <= 0:

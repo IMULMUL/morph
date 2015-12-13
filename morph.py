@@ -115,7 +115,10 @@ if __name__ == "__main__":
         config.logging_exception('C', "MOR_BROWSER or MOR_DEBUGGER is not found in config.py.")
         sys.exit()
     if len(debugger) <= 0:
-        debugger = dbg_keys[0]
+        for dbg_i in dbg_keys:
+            if config.MOR_DEBUGGERS[config.MOR_SYSTEM][dbg_i]['property'] == "default":
+                debugger = dbg_i
+                break
     # 3.判断运行参数是否合理
     fuzzer_path = os.path.join(config.MOR_FUZZERS_FOLDER, fuzzer)
     fuzzer_exist = os.path.exists(fuzzer_path)
