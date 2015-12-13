@@ -65,8 +65,8 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, 
 # Versions
 
 * v0.2.3
-	* 解决了DICT无序性导致MOR_DEBUGGER_NICK取值混乱的错误
-	* 解决了FUZZER为目录形式时CRASH目录缺少FUZZER相关文件的错误
+	* 修复了Dict字典无序性导致默认Debugger取值混乱的错误
+	* 修复了Fuzzer作为目录形式时Crash目录缺少Fuzzer相关文件的错误
 
 * v0.2.2
 	* 优化了Fuzzer插件读取策略，能够支持Fuzzer目录作为插件
@@ -84,8 +84,10 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, 
 
 * v0.1.5
 	* 解决了MSECExtentions v1.6.0插件在Windbg中出现Can't load Library的错误
+	
 * v0.1.3
 	* 增加了t_m.isAlive判断监控进程是否真正结束的标志
+	
 * v0.1.2
 	* 解决了Process32First和Process32Next返回值不等同于Python False对象类型引起的bug
 
