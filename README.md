@@ -1,6 +1,6 @@
 # Morph
 
-Morph is an open source browser fuzzing framework based python.It provides an automated way to fuzz a browser, like IE, Firefox, Chrome, etc.Everyone can write himself fuzzer for morph, for example nduja, fileja, cross_fuzz, etc.
+Morph is an open source browser fuzzing framework based python.It provides an automated way to fuzz a browser.You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, etc.
 
 # Features
 
