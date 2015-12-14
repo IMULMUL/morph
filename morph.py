@@ -66,10 +66,15 @@ def pre_fuzz():
         t_m = threading.Thread(target=monitor.Watch)
         t_m.setDaemon(True)
         t_m.start()
-        t_m.join(60 * 5)  # seconds
+        t_m.join(config.MOR_FUZZING_TIMEOUT)  # seconds
+        timeout = False
         while t_m.is_alive(): # 线程超时
             config.MOR_MONITOR_RUNNING = False
+            timeout = True
             time.sleep(1)
+        if timeout is True:
+            # 保证了某个网页超时能继续运行后面的样本
+            config.MOR_LAST_COMPLETE_VECOTR += 1
         # 跳到下一个需要执行的Vector序号
         vector_i = config.MOR_LAST_COMPLETE_VECOTR + 1
 

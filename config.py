@@ -15,9 +15,10 @@ MOR_VECTORS_FOLDER = "vector"
 MOR_FUZZER_SUFFIX = ".html"
 MOR_DBGLOG_SUFFIX = ".log"
 
-MOR_PRE_VECTORS_NUM = 100
-MOR_RANDOM_ARRAY_LENGTH = 10000
-MOR_MAX_RANDOM_NUMBER = 1000
+MOR_PRE_VECTORS_NUM = 100  # 每次Fuzzing的样本数量
+MOR_RANDOM_ARRAY_LENGTH = 10000  # 随机数组默认长度
+MOR_MAX_RANDOM_NUMBER = 1000  # 随机数组中的元素最大值
+MOR_FUZZING_TIMEOUT = 300  # 单个样本Fuzzing超时时间/Seconds
 MOR_WEBSOCKET_SERVER = "127.0.0.1:8080"
 
 MOR_BROWSERS = {
@@ -98,7 +99,7 @@ def morph_signals():
          \_/  \/  \_/\____/\_/   \_/   \_/  /_/
 
   By Walkerfuz of Taurus Security(github.com/walkerfuz)
-                                  Morph - Version 0.2.3
+                                  Morph - Version 0.2.4
     ''')
 
 def morph_usage():

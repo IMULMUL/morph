@@ -64,6 +64,9 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, 
 
 # Versions
 
+* v0.2.4
+	* 修复了因样本运行时间过长导致无法继续Fuzz的错误
+
 * v0.2.3
 	* 修复了Dict字典无序性导致默认Debugger取值混乱的错误
 	* 修复了Fuzzer作为目录形式时Crash目录缺少Fuzzer相关文件的错误
@@ -99,7 +102,7 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, 
 
 # Others
 
-如果设置了cdb.exe作为系统默认的即时调试器，若后续想采用WerFault.exe的监控方法，需要提前取消之前的即时设置。
+如果设置了cdb.exe作为系统默认的即时调试器，若后续想采用WerFault.exe监控方法，需要提前取消之前的即时设置。
 
 取消cdb.exe默认即时调试器的方法：将注册表以下两个位置的Debugger 和Auto键值删除。
 
@@ -109,4 +112,4 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, 
 
 ------
 
-如果有什么bug或建议，请邮件联系walkerfuz@outlook.com。
+如果有什么bug或建议，请邮件联系walkerfuz#outlook.com。
