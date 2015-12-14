@@ -1,9 +1,6 @@
 # Morph
-------
 
-Morph is an open source browser fuzzing framework written by Walkerfuz of Taurus Security.It provides an automated way to fuzz a browser, like IE, Firefox, Chrome, etc.
-
-You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, etc.
+Morph is an open source browser fuzzing framework written by Walkerfuz of Taurus Security.It provides an automated way to fuzz a browser, like IE, Firefox, Chrome, etc.Everyone can write himself fuzzer for morph, for example nduja, fileja, cross_fuzz.
 
 # Features
 
@@ -33,7 +30,7 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, 
 
 1.默认情况下，可以下载Morph直接运行：
 
-> morph -b IE -f nduja.html
+> morph --browser=IE --fuzzer=nduja.html
 
 监控器进程根据config.py中设置的默认异常进程判断是否发生Crash。
 
@@ -64,12 +61,6 @@ You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, 
 > 在firefox进入about:config找到toolkit.startup.max_resumed_crashes（默认是3），将其设置为-1即可。
 
 # Versions
-
-* v0.2.4
-	* 修复了因样本运行时间过长导致无法继续Fuzz的错误
-* v0.2.3
-	* 修复了Dict字典无序性导致默认Debugger取值混乱的错误
-	* 修复了Fuzzer作为目录形式时Crash目录缺少Fuzzer相关文件的错误
 	
 [详细信息](https://github.com/walkerfuz/morph/blob/master/versions.md)
 
