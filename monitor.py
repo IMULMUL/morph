@@ -14,9 +14,9 @@ def GetCrashHash(logPath):
         crash_exploitable = re.search("Exploitability Classification: \w+", content).group().replace("Exploitability Classification: ", "", 1)
         crash_type = re.search("Short Description: \w+", content).group().replace("Short Description: ", "", 1)
         crash_md5 = re.search("Hash=0x\w+\.0x\w+", content).group().replace("Hash=", "", 1)
-        return ("%s_%s_%s_%s" % (config.MOR_FUZZER_NICK, crash_exploitable, crash_type, crash_md5))
+        return ("%s_%s_%s" % (crash_exploitable, crash_type, crash_md5))
     except: # 若解析log不成功则直接以当前时间命名该Crash
-        return ("%s_Crash_%s" % (config.MOR_FUZZER_NICK, time.time()))
+        return ("Crash_%s" % time.time())
 
 
 def handle_crash_proc( ):

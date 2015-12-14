@@ -154,29 +154,28 @@ def InitFuzzArgs():
     if file.CreateFolder(MOR_VECTORS_FOLDER) is False:
         logging_exception('I', "Could not create folder:%s." % MOR_VECTORS_FOLDER)
         sys.exit()
-    # 4.检查Fuzzer插件和init.morph配置文件是否存在 并读取模板
-    f_path = os.path.join(MOR_FUZZERS_FOLDER, MOR_FUZZER_NICK)
+    # 4.检查Fuzzer插件和init.morph配置文件是否存在 并重设CRASHES和VECTORS目录
+    f = os.path.join(MOR_FUZZERS_FOLDER, MOR_FUZZER_NICK)
+    MOR_VECTORS_FOLDER = os.path.join(MOR_VECTORS_FOLDER, MOR_FUZZER_NICK)
+    MOR_CRASHES_FOLDER = os.path.join(MOR_CRASHES_FOLDER, MOR_BROWSER_NICK)
     # (1)若Fuzzer插件是目录形式，则将该目录拷贝至VECTOR和CRASH目录
-    if os.path.isdir(f_path) is True:
-        vector_fuzzer_path = os.path.join(MOR_VECTORS_FOLDER, MOR_FUZZER_NICK)
-        crash_fuzzer_path = os.path.join(MOR_CRASHES_FOLDER, MOR_FUZZER_NICK)
-        if file.CopyDirFromSrcToDst(f_path, vector_fuzzer_path) is False \
-                or file.CopyDirFromSrcToDst(f_path, crash_fuzzer_path) is False:
-            logging_exception('I', "Could not copy folder:%s to %s or %s." % (f_path, vector_fuzzer_path, crash_fuzzer_path))
+    if os.path.isdir(f) is True:
+        if file.CopyDirFromSrcToDst(f, MOR_VECTORS_FOLDER) is False or file.CopyDirFromSrcToDst(f, MOR_CRASHES_FOLDER) is False:
+            logging_exception('I', "Could not copy folder:%s to %s or %s." % (f, MOR_VECTORS_FOLDER, MOR_CRASHES_FOLDER))
             sys.exit()
         # Fuzzer目录下的FuzzerNick.SUFFIX即为Fuzzer的主模板
-        f_path = os.path.join(f_path, MOR_FUZZER_NICK + MOR_FUZZER_SUFFIX)
-        # 重新设置CRASHES和VECTORS目录
-        MOR_VECTORS_FOLDER = os.path.join(MOR_VECTORS_FOLDER, MOR_FUZZER_NICK)
-        MOR_CRASHES_FOLDER = os.path.join(MOR_CRASHES_FOLDER, MOR_FUZZER_NICK)
+        f = os.path.join(f, MOR_FUZZER_NICK + MOR_FUZZER_SUFFIX)
     # (2)若Fuzzer插件是文件形式，则不作预处理
-    elif os.path.isfile(f_path) is True:
-        pass
+    elif os.path.isfile(f) is True:
+        if (os.path.exists(MOR_VECTORS_FOLDER) is False and file.CreateFolder(MOR_VECTORS_FOLDER) is False) or \
+                (os.path.exists(MOR_CRASHES_FOLDER) is False and file.CreateFolder(MOR_CRASHES_FOLDER) is False):
+            logging_exception('I', "Could not create folder:%s or %s." % (MOR_VECTORS_FOLDER, MOR_CRASHES_FOLDER))
+            sys.exit()
     else:
         logging_exception('I', "Can not find %s in path %s." % (MOR_FUZZER_NICK, MOR_FUZZERS_FOLDER))
         sys.exit()
     # 5.读取Fuzzer模板和Init.morph模板
-    MOR_FUZ_VECTOR_TEMPLET = file.ReadFromFile(f_path)
+    MOR_FUZ_VECTOR_TEMPLET = file.ReadFromFile(f)
     MOR_INIT_VECTOR_TEMPLET = file.ReadFromFile(os.path.join(MOR_FUZZERS_FOLDER, 'init.morph'))
     if len(MOR_FUZ_VECTOR_TEMPLET) <= 0 or len(MOR_INIT_VECTOR_TEMPLET) <= 0:
         logging_exception('I', "Read fuzzer:%s or init.morph from %s is failed." % (MOR_FUZZER_NICK, MOR_FUZZERS_FOLDER))
