@@ -2,7 +2,7 @@
 
 * v0.2.5
 	* 采用基于dbghelp.dll的PyDbgEng3来监控目标程序
-	* 精简了Morph样插件编写格式 只需要%MOR_ARRAY%
+	* 精简了Morph插件编写格式 只需要%MOR_ARRAY%
 	* 采用window.reload代替了WebSocket逻辑
 	* WEB Server采用Tornado实现	
 	* 采用Multiprocessing代替Multithread	
