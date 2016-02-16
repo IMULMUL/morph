@@ -76,6 +76,10 @@ if __name__ == "__main__":
         usage()
         sys.exit()
 
+    # 创建crash目录
+    if os.path.exists("crash") is False:
+        os.mkdir("crash")
+
     signals()
     # 2.开启Web服务器
     p_s = multiprocessing.Process(target=web.listen, args=(config.MOR_PORT, fuzzer, config.MOR_POSTFIX ))
