@@ -1,5 +1,12 @@
 # Versions
 
+* v0.2.5
+	* 采用基于dbghelp.dll的PyDbgEng3来监控目标程序
+	* 精简了Morph样插件编写格式 只需要%MOR_ARRAY%
+	* 采用window.reload代替了WebSocket逻辑
+	* WEB Server采用Tornado实现	
+	* 采用Multiprocessing代替Multithread	
+
 * v0.2.4
 	* 修复了因样本运行时间过长导致无法继续Fuzz的错误
 	* 优化了Crash存储路径	
