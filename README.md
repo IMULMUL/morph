@@ -12,7 +12,7 @@ Morph is an open source browser fuzzing framework based python.It provides an au
 * Required
     * Python >= 3.0
 	* Tornado
-	* Pywin32
+	* Comtypes
 	* PyDbgEng3
     * IE3+, Firefox1+, Chrome1+, etc
     * Currently only for Windows platform
@@ -30,7 +30,7 @@ Morph is an open source browser fuzzing framework based python.It provides an au
 
 Download Tornado from https://pypi.python.org/pypi/tornado/ and setup.
 
-Download Pywin32 from https://sourceforge.net/projects/pywin32/ and setup.
+Download Comtypes from https://github.com/enthought/comtypes and setup.
 
 Download PyDbgEng3 from https://github.com/walkerfuz/PyDbgEng3 and setup.
 
