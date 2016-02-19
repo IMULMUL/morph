@@ -34,7 +34,7 @@ Download Comtypes from https://github.com/jakogut/comtypes and setup.
 
 Download PyDbgEng3 from https://github.com/walkerfuz/PyDbgEng3 and setup.
 
-Download Morph from https://github.com/walkerfuz/Morph and unrar.
+Download Morph from https://github.com/walkerfuz/Morph and unzip.
 	  
 2.默认情况下，可以下载Morph直接运行：
 
