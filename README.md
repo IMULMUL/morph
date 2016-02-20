@@ -14,7 +14,8 @@ Morph is an open source browser fuzzing framework based python.It provides an au
 	* Tornado
 	* PyDbgEng3
 		* psutil
-		* comtypes	
+		* comtypes
+		* Visual C++ Redistributable 2012
     * IE3+, Firefox1+, Chrome1+, etc
     * Currently only for Windows platform
 	
@@ -34,6 +35,8 @@ Download Tornado from https://pypi.python.org/pypi/tornado/ and setup.
 Download psutil from https://pypi.python.org/pypi/psutil and setup.
 
 Download comtypes from https://github.com/enthought/comtypes and setup.
+
+Download Visual C++ Redistributable 2012 from https://www.microsoft.com/en-us/download/details.aspx?id=30679 and setup.
 
 Download PyDbgEng3 from https://github.com/walkerfuz/PyDbgEng3 adn setup.
 
