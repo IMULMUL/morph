@@ -12,8 +12,9 @@ Morph is an open source browser fuzzing framework based python.It provides an au
 * Required
     * Python >= 3.0
 	* Tornado
-	* Comtypes
 	* PyDbgEng3
+		* psutil
+		* comtypes	
     * IE3+, Firefox1+, Chrome1+, etc
     * Currently only for Windows platform
 	
@@ -30,9 +31,11 @@ Morph is an open source browser fuzzing framework based python.It provides an au
 
 Download Tornado from https://pypi.python.org/pypi/tornado/ and setup.
 
-Download Comtypes from https://github.com/jakogut/comtypes and setup.
+Download psutil from https://pypi.python.org/pypi/psutil and setup.
 
-Download PyDbgEng3 from https://github.com/walkerfuz/PyDbgEng3 and setup.
+Download comtypes from https://github.com/enthought/comtypes and setup.
+
+Download PyDbgEng3 from https://github.com/walkerfuz/PyDbgEng3 adn setup.
 
 Download Morph from https://github.com/walkerfuz/Morph and unzip.
 	  
@@ -55,6 +58,13 @@ Download Morph from https://github.com/walkerfuz/Morph and unzip.
 > 在firefox进入about:config找到toolkit.startup.max_resumed_crashes（默认是3），将其设置为-1
 
 # Versions
+
+* v0.2.5
+	* 采用基于dbghelp.dll的PyDbgEng3来监控目标程序
+	* 精简了Morph插件编写格式 只需要%MOR_ARRAY%
+	* 采用window.reload代替了WebSocket逻辑
+	* WEB Server采用Tornado实现	
+	* 采用Multiprocessing代替Multithread	
 	
 [详细信息](https://github.com/walkerfuz/morph/blob/master/versions.md)
 
