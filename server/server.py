@@ -34,13 +34,13 @@ def usage():
     print('  -p,--port:       Select port to listen on, 8080 default.')
     print('  -h,--help:       help message.')
     print('For example:')
-    print('  server -p 80')
+    print('  server -p 8080')
 
 if __name__ == '__main__':
 
     # 1.获取运行参数并检查合法性
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hp", ["help", "port="])
+        opts, args = getopt.getopt(sys.argv[1:], "hp:", ["help", "port="])
     except getopt.GetoptError:
         usage()
         sys.exit()

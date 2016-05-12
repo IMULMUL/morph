@@ -45,17 +45,25 @@ Download PyDbgEng3 from https://github.com/walkerfuz/PyDbgEng3 adn setup.
 
 Download Morph from https://github.com/walkerfuz/Morph and unzip.
 
-2.首先运行用于保存漏洞样本的Tornado Server服务器：
+2.运行：
+
+假设存储漏洞结果的服务器为192.168.1.10，运行Morph漏洞挖掘任务的客户端为192.168.1.20。
+
+首先将Server目录拷贝至服务器上，启动Tornado Server服务器：
 
 > server -p 8080
 
-本机打开http://127.0.0.1:8080访问到漏洞样本列表。
+浏览器访问[http://192.168.1.10:8080/upload]展示收集的漏洞样本结果列表。
 
-然后选择运行Morph：
+然后将node目录拷贝至客户端，运行Morph：
 
 > morph -b IE -m nduja_rand -p 7890 -s 192.168.1.10:8080
 
 目前可用的modules包括nduja_rand、nduja_try、WebAPIs等。
+
+运行截图：
+
+![sample](http:// example.com /unicorn.png "sample")
 
 
 # Precautions
