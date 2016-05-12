@@ -1,3 +1,6 @@
+
+![sample](https://github.com/walkerfuz/morph/blob/master/sample.png "sample")
+
 # About
 
 Morph is an open source browser fuzzing framework based python.It provides an automated way to fuzz a browser.You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, etc.
@@ -60,10 +63,6 @@ Download Morph from https://github.com/walkerfuz/Morph and unzip.
 > morph -b IE -m nduja_rand -p 7890 -s 192.168.1.10:8080
 
 目前可用的modules包括nduja_rand、nduja_try、WebAPIs等。
-
-运行截图：
-
-![sample](https://github.com/walkerfuz/morph/blob/master/sample.png?raw=true "sample")
 
 
 # Precautions
