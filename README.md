@@ -63,7 +63,7 @@ Download Morph from https://github.com/walkerfuz/Morph and unzip.
 
 运行截图：
 
-![sample](http:// example.com /unicorn.png "sample")
+![sample](https://github.com/walkerfuz/morph/blob/master/sample.png?raw=true "sample")
 
 
 # Precautions
