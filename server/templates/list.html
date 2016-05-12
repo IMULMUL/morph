@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <title>Files List</title>
+    <!-- Bootstrap core CSS -->
+    <link href="{{ static_url('css/bootstrap.min.css') }}" rel="stylesheet">
+  </head>
+
+  <body>
+
+
+
+    <!-- Begin page content -->
+    <div class="container">
+      <div class="page-header">
+        <h2>结果汇总</h2>
+      </div>
+      <p >这里汇集了所有的分布式挖掘结果，以便集中处理。
+		<div class="panel panel-default">
+			  <!-- Default panel contents -->
+			  <div class="alert alert-success" role="alert">.....</div>
+
+			  <!-- Table -->
+			  <table class="table">
+				<thead>
+				  <tr>
+					<th>序号</th>
+					<th>文件名称</th>
+				  </tr>
+				</thead>
+				<tbody>
+				
+				  {% for index, file in enumerate(file_list) %}
+					  <tr>
+						<td>{{index+1}}</td>
+						<td><a href="upload/{{file}}">{{ file }}</a></td>
+					  </tr>
+				  {% end %}
+				
+
+				</tbody>
+			  </table>
+		</div>	
+	
+	
+	</div>	
+	
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">Authored by <code>Walkerfuz</code> and Powered by <code>Tornado</code>.</p>
+      </div>
+    </footer>
+
+  </body>
+</html>

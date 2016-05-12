@@ -1,5 +1,10 @@
 # Versions
 
+
+* v0.3.0
+	* 采用新的模块开发格式，支持Web API Fuzz
+	* 修复了浏览器单进程时Fuzz进程被错误终止的bug
+
 * v0.2.5
 	* 采用基于dbghelp.dll的PyDbgEng3来监控目标程序
 	* 精简了Morph插件编写格式 只需要%MOR_ARRAY%

@@ -12,18 +12,26 @@ MOR_BROWSER = {
     "IE": {
         'path': "C:/%s/Internet Explorer/iexplore.exe" % MOR_PATH,
         'args': "",
+        'mode': "S", # Single Process
     },
     "FF": {
         'path': "C:/%s/Mozilla Firefox/firefox.exe" % MOR_PATH,
         'args': "",
+        'mode': "S", # Single Process
     },
     "CM": {
         'path': "C:/%s/Google/Chrome/Application/chrome.exe" % MOR_PATH,
         'args': "--no-sandbox",
+        'mode': "M", # Multi Process
+    },
+    "OP": {
+        'path': "C:/%s/Opera/launcher.exe" % MOR_PATH,
+        'args': "--no-sandbox",
+        'mode': "M", # Multi Process
     },
 }
 
-MOR_POSTFIX = ".html"
+WEB_PORT = 7890
+MOR_SERVER = "127.0.0.1:8080"
 
-MOR_PORT = 7890
-MOR_WEB = "http://127.0.0.1:%s" % MOR_PORT
+MOR_RESULT = "Morph - Version 0.3.0 By Walkerfuz of Taurus Security."

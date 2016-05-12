@@ -21,12 +21,15 @@ Morph is an open source browser fuzzing framework based python.It provides an au
 	
 # Usages
 
-	Morph usage:
-	  -b,--browser:    Select which browser,contains IE, FF, CM, etc.
-	  -f,--fuzzer:     Select which fuzzer to use.
-	  -h,--help:       help message.
+    Morph usage:
+      -b,--browser:    Select which browser,contains IE, FF, CM, OP, EG, etc.
+      -p,--port:       Select port to get sample and results, 7890 default.
+      -m,--module:     Select which module to use.
+      -s,--server:     Select which Server to save results, localhost default.
+      -h,--help:       help message.
 	For example:
-	  morph -b IE -f nduja.html
+	  server -p 888
+	  morph -b IE -m nduja_rand -p 7890 -s 192.168.1.10:8080
 
 1.安装必需模块：
 
@@ -41,33 +44,40 @@ Download Visual C++ Redistributable 2012 from https://www.microsoft.com/en-us/do
 Download PyDbgEng3 from https://github.com/walkerfuz/PyDbgEng3 adn setup.
 
 Download Morph from https://github.com/walkerfuz/Morph and unzip.
-	  
-2.默认情况下，可以下载Morph直接运行：
 
-> morph -b IE -f nduja.html
+2.首先运行用于保存漏洞样本的Tornado Server服务器：
 
-得到的POC样本存储在Crash目录。
+> server -p 8080
 
-3.如果Fuzzer插件除html模板外的图片或视频，可以指定某个目录作为Fuzzer插件：
+本机打开http://127.0.0.1:8080访问到漏洞样本列表。
 
-> morph -b FF -f simple
+然后选择运行Morph：
+
+> morph -b IE -m nduja_rand -p 7890 -s 192.168.1.10:8080
+
+目前可用的modules包括nduja_rand、nduja_try、WebAPIs等。
+
 
 # Precautions
 
 1.如果Fuzz目标是IE，则需将IE设置为单进程模式：
+
 > 将HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main下面的TabProcGrowth键值设置为0
 
 2.如果Fuzz目标是Firefox，则需关闭安全模式：
+
 > 在firefox进入about:config找到toolkit.startup.max_resumed_crashes（默认是3），将其设置为-1
+
+关闭Firefox命令行调试提示信息：
+
+> 将browser.safebrowsing.debug设置为false
 
 # Versions
 
-* v0.2.5
-	* 采用基于dbghelp.dll的PyDbgEng3来监控目标程序
-	* 精简了Morph插件编写格式 只需要%MOR_ARRAY%
-	* 采用window.reload代替了WebSocket逻辑
-	* WEB Server采用Tornado实现	
-	* 采用Multiprocessing代替Multithread	
+* v0.3.0
+	* 采用新的模块开发格式，支持Web API Fuzzing
+	* 修复了浏览器单进程时Fuzz进程被错误终止的bug
+	* 采用Web API module发现的漏洞样本为类似于Grinder生成的精简样本
 	
 [详细信息](https://github.com/walkerfuz/morph/blob/master/versions.md)
 
