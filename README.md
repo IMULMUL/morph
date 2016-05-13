@@ -56,7 +56,7 @@ Download Morph from https://github.com/walkerfuz/Morph and unzip.
 
 > server -p 8080
 
-浏览器访问[http://192.168.1.10:8080/upload]展示收集的漏洞样本结果列表。
+浏览器访问 http://192.168.1.10:8080/upload 展示收集的漏洞样本结果列表。
 
 然后将node目录拷贝至客户端，运行Morph：
 
