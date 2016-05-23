@@ -46,7 +46,7 @@ if __name__ == '__main__':
         sys.exit()
     port = None
     for name, value in opts:
-        if port in ('-p', '--port'):
+        if name in ('-p', '--port'):
             port = value
         else:
             usage()
