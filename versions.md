@@ -1,5 +1,7 @@
 # Versions
 
+* v0.3.1
+	* 增加了Crash二次确认逻辑，丢弃不可重现Crash样本
 
 * v0.3.0
 	* 采用新的模块开发格式，支持Web API Fuzz

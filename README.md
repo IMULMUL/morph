@@ -56,7 +56,7 @@ Download Morph from https://github.com/walkerfuz/Morph and unzip.
 
 > server -p 8080
 
-浏览器访问 http://192.168.1.10:8080/upload 展示收集的漏洞样本结果列表。
+浏览器访问[http://192.168.1.10:8080/upload]展示收集的漏洞样本结果列表。
 
 然后将node目录拷贝至客户端，运行Morph：
 
@@ -80,6 +80,9 @@ Download Morph from https://github.com/walkerfuz/Morph and unzip.
 > 将browser.safebrowsing.debug设置为false
 
 # Versions
+
+* v0.3.1
+	* 增加了Crash二次确认逻辑，丢弃不可重现Crash样本
 
 * v0.3.0
 	* 采用新的模块开发格式，支持Web API Fuzzing

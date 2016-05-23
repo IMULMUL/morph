@@ -24,7 +24,7 @@ def signals():
          \_/  \/  \_/\____/\_/   \_/   \_/  /_/
 
   By Walkerfuz of Taurus Security(https://github.com/walkerfuz)
-                                          Morph - Version 0.3.0
+                                          Morph - Version 0.3.1
     ''')
 
 def usage():
@@ -44,8 +44,12 @@ def push(url_args, file_name, file_content):
     req = urllib.request.Request(url=url_args, data=post_data)
     return urllib.request.urlopen(req).read().decode("utf-8")
 
-def pre_fuzz(browser, proc, mode, result_url, server):
-    crashInfo = Debugger.Run(proc.encode(), False, mode)
+def pre_fuzz(browser, path, args, sample_url, result_url,  mode, server):
+
+
+    sample_proc = "%s %s %s " % (path, args, sample_url)
+
+    crashInfo = Debugger.Run(sample_proc.encode(), False, mode)
     # 目标进程被关闭
     # v0.3.1 修复判断crashInfo是否为空的正确方式
     #if crashInfo is None:
@@ -54,13 +58,30 @@ def pre_fuzz(browser, proc, mode, result_url, server):
     if not crashInfo:
         return
 
-    # 1. 获取漏洞样本
+    result_proc = "%s %s %s " % (path, args, result_url)
+
+    p_c = multiprocessing.Process(target=pre_save, args=(browser, result_proc, mode, result_url, server, ))
+    p_c.daemon = True
+    p_c.start()
+    p_c.join(30)
+    p_c.terminate()
+
+
+def pre_save(browser, result_proc, mode, result_url, server):
+
+    # 1. 重新打开漏洞样本以确认是否造成二次崩溃
+    crashInfo = Debugger.Run(result_proc.encode(), False, mode)
+    if not crashInfo:
+        return
+    print("[+R+]:Crash is confirmed, saving...")
+
+    # 2. 获取漏洞样本
     try:
         vectorInfo = (urllib.request.urlopen(result_url).read()).decode('utf-8')
     except:
         print("[-E-]:Get poc file %s from %s is failed." % (crashInfo['bucket'], result_url))
         return
-    # 2. 上传结果
+    # 3. 上传结果
     v_name = browser + "_" + crashInfo['bucket'] + ".html"
     c_name = browser + "_" + crashInfo['bucket'] + '.crash'
     upload_path = "http://%s/upload" % server
@@ -152,11 +173,10 @@ if __name__ == "__main__":
     result_url = web + "/result"
     path = config.MOR_BROWSER[browser]['path']
     args = config.MOR_BROWSER[browser]['args']
-    proc = "%s %s %s " % (path, args, sample_url)
     mode = config.MOR_BROWSER[browser]['mode']
     while 1:
-        p_b = multiprocessing.Process(target=pre_fuzz, args=(browser, proc, mode, result_url, server, ))
-        p_b.daemon = True
+        p_b = multiprocessing.Process(target=pre_fuzz, args=(browser, path, args, sample_url, result_url,  mode, server, ))
+        # p_b.daemon = True
         p_b.start()
         p_b.join(300)
         p_b.terminate()
