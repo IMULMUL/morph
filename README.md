@@ -72,6 +72,7 @@ Download Morph from https://github.com/walkerfuz/Morph and unzip.
 
 目前可用的modules包括nduja_rand、nduja_try、WebAPIs等。自定义Fuzzing逻辑只需编写对外提供可以生成静态样本的gen函数接口的Python脚本即可。格式如下：
 
+```Python
 #! /user/bin/python
 # coding:UTF-8
 class JSTemplater():
@@ -86,7 +87,7 @@ class JSTemplater():
 def gen():
     js = JSTemplater()
     return js.generate()
-
+```
 
 # Precautions
 
