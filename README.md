@@ -1,5 +1,17 @@
 ![logic](https://github.com/walkerfuz/morph/blob/master/logic.png "logic")
 
+# Update coming soon
+
+A new version of Morph will be coming soon, not only browser but aslo fuzzing everything on any system.
+
+Edge, SMB, Kernel, etc...
+
+The most important is that it's easy to install and use by alone or many machines!
+
+When Peach is not opensource and Sulley is never updated, what we should use? Answer is: Morph.
+
+
+
 # About
 
 Morph is an open source browser fuzzing framework based python.It provides an automated way to fuzz a browser.You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, etc.
