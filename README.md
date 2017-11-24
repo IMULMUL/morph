@@ -1,4 +1,3 @@
-![logic](https://github.com/walkerfuz/morph/blob/master/logic.png "logic")
 
 # Update coming soon
 
@@ -10,7 +9,7 @@ The most important is that it's easy to install and use by alone or many machine
 
 When Peach is not opensource and Sulley is never updated, what we should use? Answer is: Morph.
 
-
+![logic](https://github.com/walkerfuz/morph/blob/master/logic.png "logic")
 
 # About
 
