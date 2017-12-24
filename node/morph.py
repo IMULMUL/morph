@@ -10,7 +10,7 @@ import urllib.request
 import multiprocessing
 import urllib.parse
 import urllib.request
-from PyDbgEng3 import Debugger
+from PyDbgEng.windows import *
 
 import config
 from web import WebServer
@@ -24,7 +24,7 @@ def signals():
          \_/  \/  \_/\____/\_/   \_/   \_/  /_/
 
   By Walkerfuz of Taurus Security(https://github.com/walkerfuz)
-                                          Morph - Version 0.3.1
+                                          Morph - Version 0.3.2
     ''')
 
 def usage():
@@ -48,14 +48,15 @@ def pre_fuzz(browser, path, args, sample_url, result_url,  mode, server):
 
 
     sample_proc = "%s %s %s " % (path, args, sample_url)
-
-    crashInfo = Debugger.Run(sample_proc.encode(), False, mode)
+	
+    dbg = UserDebugger()
+    dbg.run(sample_proc)
     # 目标进程被关闭
     # v0.3.1 修复判断crashInfo是否为空的正确方式
     #if crashInfo is None:
     #   return
     # 将if crashInfo is None 修改为 if not crashInfo
-    if not crashInfo:
+    if not dbg.crash_name or dbg.crash_description:
         return
 
     result_proc = "%s %s %s " % (path, args, result_url)
@@ -70,8 +71,9 @@ def pre_fuzz(browser, path, args, sample_url, result_url,  mode, server):
 def pre_save(browser, result_proc, mode, result_url, server):
 
     # 1. 重新打开漏洞样本以确认是否造成二次崩溃
-    crashInfo = Debugger.Run(result_proc.encode(), False, mode)
-    if not crashInfo:
+    dbg = UserDebugger()
+    dbg.Run(result_proc.encode())
+    if not dbg.crash_name or dbg.crash_description:
         return
     print("[+R+]:Crash is confirmed, saving...")
 
@@ -79,16 +81,16 @@ def pre_save(browser, result_proc, mode, result_url, server):
     try:
         vectorInfo = (urllib.request.urlopen(result_url).read()).decode('utf-8')
     except:
-        print("[-E-]:Get poc file %s from %s is failed." % (crashInfo['bucket'], result_url))
+        print("[-E-]:Get poc file %s from %s is failed." % (dbg.crash_name, result_url))
         return
     # 3. 上传结果
-    v_name = browser + "_" + crashInfo['bucket'] + ".html"
-    c_name = browser + "_" + crashInfo['bucket'] + '.crash'
+    v_name = browser + "_" + dbg.crash_name + ".html"
+    c_name = browser + "_" + dbg.crash_name + '.crash'
     upload_path = "http://%s/upload" % server
-    if push(upload_path, c_name , crashInfo['description']) is False or push(upload_path, v_name, vectorInfo) is False:
-        print("[-E-]:Push crash %s to %s is failed." % (crashInfo['bucket'], server))
+    if push(upload_path, c_name , dbg.crash_description) is False or push(upload_path, v_name, vectorInfo) is False:
+        print("[-E-]:Push crash %s to %s is failed." % (dbg.crash_name, server))
         return
-    print("[+R+]:Find crash %s and push to %s is succeed." % (crashInfo['bucket'], server))
+    print("[+R+]:Find crash %s and push to %s is succeed." % (dbg.crash_name, server))
 
 def check_ser_listen(ip, port, timeout=3):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
