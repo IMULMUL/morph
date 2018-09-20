@@ -1,100 +1,41 @@
+# Morph
 
-# Update coming soon
+```
+            __________              ____  __    __
+           /  __  __  \____  ____  / __ \/ /   / /
+          /  / / / /  / __ \/  __\/ /_/ / /___/ /
+         /  / / / /  / /_/ /  /  /  ___/  ___  /
+         \_/  \/  \_/\____/\_/   \_/   \_/  /_/
 
-A new version of Morph will be coming soon, not only browser but aslo fuzzing everything on any system.
+  By Walkerfuz of Taurus Security(https://github.com/walkerfuz)
+                                          Morph - Version 0.4.0
+```
 
-Edge, SMB, Kernel, etc...
+Morph is an open source fuzzing framework based python. 
 
-The most important is that it's easy to install and use by alone or many machines!
-
-When Peach is not opensource and Sulley is never updated, what we should use? Answer is: Morph.
-
-![logic](https://github.com/walkerfuz/morph/blob/master/logic.png "logic")
-
-# About
-
-Morph is an open source browser fuzzing framework based python.It provides an automated way to fuzz a browser.You can write yourself fuzzer for morph, for example nduja, fileja, cross_fuzz, etc.
+It provides an automated way to fuzz brower, windows photo viewer, smb protocol, dll, etc. You can create any templates like domato, tiff, avi format for everything you want to fuzz.
 
 # Features
 
-* 支持多种浏览器，例如IE、Chrome、Firefox等，正在考虑支持Edge
-* 支持自定义扩展模块，比如nduja、fileja、cross_fuz等
+* Support multiple browsers, such as IE, Chrome, Firefox, etc. Edge is considering.
+* Support custom extension templates such as domato, peach pits etc.
+* Currently only support windows, linux is under development.
 
-# Requirements
+## Install
 
-* Required
-    * Python >= 3.0
-	* Tornado
-	* PyDbgEng3
-		* comtypes
-		* Visual C++ Redistributable 2012
-    * IE3-11, Firefox1+, Chrome1+, etc
-    * Currently only for Windows platform
-	
+1. pip install tornado.
+
+2. pip install comtypes.
+
+3. Download visual c++ redistributable 2012 and setup.
+4. Download morph and run.
+
 # Usages
 
-    Morph usage:
-      -b,--browser:    Select which browser,contains IE, FF, CM, OP, EG, etc.
-      -p,--port:       Select port to get sample and results, 7890 default.
-      -m,--module:     Select which module to use.
-      -s,--server:     Select which Server to save results, localhost default.
-      -h,--help:       help message.
-	For example:
-	  server -p 888
-	  morph -b IE -m nduja_rand -p 7890 -s 192.168.1.10:8080
+Fuzzing IE with domato template:
 
-1.安装必需模块：
-
-Download Tornado from https://pypi.python.org/pypi/tornado/ and setup.
-
-Download comtypes from https://github.com/enthought/comtypes and setup.
-
-Download Visual C++ Redistributable 2012 from https://www.microsoft.com/en-us/download/details.aspx?id=30679 and setup.
-
-Download PyDbgEng from https://github.com/walkerfuz/PyDbgEng adn setup.
-
-Download Morph from https://github.com/walkerfuz/Morph and unzip.
-
-2.运行：
-
-假设存储漏洞结果的服务器为192.168.1.10，运行Morph漏洞挖掘任务的客户端为192.168.1.20。
-
-首先将Server目录拷贝至192.168.1.10服务器上，启动：
-
-> server -p 8080
-
-浏览器访问http://192.168.1.10:8080/upload展示收集的漏洞样本结果列表：
-
-![server](https://github.com/walkerfuz/morph/blob/master/server.png "server")
-
-然后将node目录拷贝至192.168.1.20客户端，运行Morph：
-
-> morph -b IE/FF/CM -m nduja_rand -p 7890 -s 192.168.1.10:8080
-
-![morph](https://github.com/walkerfuz/morph/blob/master/morph.png "morph")
-
-当然客户端和服务端也可以同为一台机器，得到的结果存储在server下的upload目录。
-
-
-# Modules
-
-目前可用的modules包括nduja_rand、nduja_try、WebAPIs等。自定义Fuzzing逻辑只需编写对外提供可以生成静态样本的gen函数接口的Python脚本即可。格式如下：
-
-```Python
-#! /user/bin/python
-# coding:UTF-8
-class JSTemplater():
-    def generate(self):
-        script = self.fuzz_nduja()
-        script += self.window_reload()
-        script = self.gen_tags("script", script)
-        head = "<title>nduja_fuzzer</title>\n"
-        body = self.gen_tags("body", script)
-        return head + body
-
-def gen():
-    js = JSTemplater()
-    return js.generate()
+```
+python morph.py -f IE -g web -t domato
 ```
 
 # Precautions
@@ -111,20 +52,35 @@ def gen():
 
 > 将browser.safebrowsing.debug设置为false
 
+# Attentions
+
+[1] - In Win10x64:
+
+```
+AttributeError: module 'comtypes.gen.DbgEng' has no attribute 'DEBUG_ANY_ID'
+```
+
+fix:
+
+This is permission error in comtypes. You have to run the script as Administrator. 
+
 # Versions
 
-* v0.3.2
-	* fix some bugs
+- v0.4.0 
+  - Redesigned the framework.
 
-* v0.3.1
-	* 增加了Crash二次确认逻辑，丢弃不可重现的Crash样本
+# Todo
 
-* v0.3.0
-	* 采用新的模块开发格式，支持Web API Fuzzing
-	* 修复了浏览器单进程时Fuzz进程被错误终止的bug
-	* 采用Web API module发现的漏洞样本为类似于Grinder生成的精简样本
-	
-[详细信息](https://github.com/walkerfuz/morph/blob/master/versions.md)
+- [ ] support edge.
+- [ ] develop TIFF target and template.
+- [ ] support linux gdb.
+
+# Thanks
+
+Morph is reformed from Peach, Cisso-kitty.
+
+- Peach - https://github.com/MozillaSecurity/peach
+- Kitty Fuzzer - https://github.com/cisco-sas/kitty
 
 ------
 
