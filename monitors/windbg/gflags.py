@@ -12,7 +12,7 @@ class GFlags():
         self.process = process
         self.gflags = os.path.join(os.path.dirname(__file__), "utils", self.frame, "gflags.exe")
 
-    def enable(self, unaligned=True):
+    def enable(self, unaligned=False):
         if unaligned:
             unaligned = "/unaligned"
         else:
