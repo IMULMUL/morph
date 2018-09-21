@@ -23,34 +23,29 @@ It provides an automated way to fuzz brower, windows photo viewer, smb protocol,
 
 ## Install
 
-1. pip install tornado.
+1. pip install comtypes.
 
-2. pip install comtypes.
-
-3. Download visual c++ redistributable 2012 and setup.
-4. Download morph and run.
+2. Download visual c++ redistributable 2012 and setup.
+3. Download morph and run.
 
 # Usages
 
 Fuzzing IE with domato template:
 
-```
+```bash
 python morph.py -f IE -g web -t domato
 ```
 
 # Precautions
 
-1.如果Fuzz目标是IE，则需将IE设置为单进程模式：
+When fuzzing Firefox, set below arguments in `about:config` firstly：
 
-> 将HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main下面的TabProcGrowth键值设置为0
+| toolkit.startup.max_resumed_crashes    | -1    |
+| :------------------------------------- | ----- |
+| browser.safebrowsing.debug             | false |
+| browser.sessionstore.resume_from_crash | false |
 
-2.如果Fuzz目标是Firefox，则需关闭安全模式：
 
-> 在firefox进入about:config找到toolkit.startup.max_resumed_crashes（默认是3），将其设置为-1
-
-关闭Firefox命令行调试提示信息：
-
-> 将browser.safebrowsing.debug设置为false
 
 # Attentions
 
@@ -71,8 +66,8 @@ This is permission error in comtypes. You have to run the script as Administrato
 
 # Todo
 
-- [ ] support edge.
-- [ ] develop TIFF target and template.
+- [ ] develop TIFF target and template
+- [ ] support edge
 - [ ] support linux gdb.
 
 # Thanks

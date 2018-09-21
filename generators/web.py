@@ -1,42 +1,62 @@
-#! /user/bin/python
-# coding:UTF-8
-import logging
-import tornado.web
-import tornado.ioloop
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from socketserver import ThreadingMixIn
+from functools import partial
+import random
 import socket
 import importlib
-import random
 
-template_backup = None
+fuzz_data_backup = None
 
-class FuzzHandler(tornado.web.RequestHandler):
-    def initialize(self, template):
-        self.template = importlib.import_module("templates.{}".format(template))
-        self.template = self.template.Template()
+class MyHttpRequestHandler(BaseHTTPRequestHandler):
 
-    def get(self):
-        global template_backup
+    def __init__(self, template, *args, **kwargs):
+        template = importlib.import_module("templates.{}".format(template))
+        self.template = template.Template()
+        super().__init__(*args, **kwargs)
+
+    # override log_message
+    def log_message(self, format, *args):
+        return
+
+    def log_error(self, format, *args):
+        return        
+    
+    def fuzz_handler(self):
+        global fuzz_data_backup
         fuzz_data = self.template.generate()
-        template_backup = fuzz_data.replace("window.location.reload(true);", "")
-        self.write(fuzz_data.encode('utf-8'))
+        fuzz_data_backup = fuzz_data.replace("window.location.reload(true);", "")
+        return fuzz_data
+    
+    def save_handler(self):
+        return fuzz_data_backup
 
-class SaveHandler(tornado.web.RequestHandler):
-    def get(self):
-        global template_backup
-        self.write(template_backup.encode('utf-8'))
+    # GET
+    def do_GET(self):
+        if self.path == "/fuzz":
+            response = self.fuzz_handler()
+        elif self.path == "/save":
+            response = self.save_handler()
+        else:
+            return
+        try:
+            self.send_response_only(200)
+            self.send_header("Content-type", "text/html; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(response.encode("utf-8"))
+        except:
+            pass            
+
+class ThreadingHttpServer(ThreadingMixIn, HTTPServer):
+    pass
 
 class Generator():
     def __init__(self, template):
-        self.port = random.randint(50000, 60000)
-        handler = [
-            (r"/fuzz", FuzzHandler, dict(template=template)),
-            (r"/save", SaveHandler),
-        ]
+        self.host = "127.0.0.1"
+        self.template = template
+        self.port = random.randint(10000, 60000)
         self.fuzz_path = "http://127.0.0.1:{}/fuzz".format(self.port)
         self.save_path = "http://127.0.0.1:{}/save".format(self.port)
 
-        self.httpServer = tornado.web.Application(handlers=handler)
-    
     def save(self):
         pass
 
@@ -50,8 +70,6 @@ class Generator():
             return False
 
     def run(self):
-        # cancel log output in commandline
-        logging.getLogger('tornado.access').disabled = True
-        logging.getLogger('tornado.general').disabled = True
-        self.httpServer.listen(self.port)
-        tornado.ioloop.IOLoop.current().start()
+        handler = partial(MyHttpRequestHandler, self.template)
+        self.httpd = ThreadingHttpServer((self.host, self.port), handler)
+        self.httpd.serve_forever()

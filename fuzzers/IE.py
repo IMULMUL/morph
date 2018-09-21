@@ -21,12 +21,13 @@ class Fuzzer():
 
     def start_generator(self):
         p_s = multiprocessing.Process(target=self.generator.run)
-        p_s.daemon = True  # 随主进程一起结束
+        p_s.daemon = True  # daemon with main process
         p_s.start()
 
         while not self.generator.check():
             print("Warning: Generator 127.0.0.1:{} is not opened, wait or check.".format(self.generator.port))
             time.sleep(2)
+        print("Status: Generator 127.0.0.1:{} is not opened, wait or check.".format(self.generator.port))
     
     def recheck(self):
         # confirm
@@ -55,8 +56,7 @@ class Fuzzer():
         p_c.daemon = True
         p_c.start()
         p_c.join(30)
-        p_c.terminate()        
-        
+        p_c.terminate()       
 
     def run(self):
         self.start_generator()
