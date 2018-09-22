@@ -10,16 +10,17 @@ fuzz_data_backup = None
 class MyHttpRequestHandler(BaseHTTPRequestHandler):
 
     def __init__(self, template, *args, **kwargs):
-        template = importlib.import_module("templates.{}".format(template))
+        template = importlib.import_module(template)
         self.template = template.Template()
-        super().__init__(*args, **kwargs)
+        # Resolved ConnectionResetError: [WinError 10054] 
+        try:
+            super().__init__(*args, **kwargs)
+        except ConnectionResetError:
+            pass
 
     # override log_message
     def log_message(self, format, *args):
-        return
-
-    def log_error(self, format, *args):
-        return        
+        pass     
     
     def fuzz_handler(self):
         global fuzz_data_backup
@@ -32,14 +33,16 @@ class MyHttpRequestHandler(BaseHTTPRequestHandler):
 
     # GET
     def do_GET(self):
-        if self.path == "/fuzz":
-            response = self.fuzz_handler()
-        elif self.path == "/save":
-            response = self.save_handler()
-        else:
-            return
         try:
-            self.send_response_only(200)
+            if self.path == "/fuzz":
+                response = self.fuzz_handler()
+            elif self.path == "/save":
+                response = self.save_handler()
+                print("xxxxx")
+            else:
+                return
+
+            self.send_response(200)
             self.send_header("Content-type", "text/html; charset=utf-8")
             self.end_headers()
             self.wfile.write(response.encode("utf-8"))
@@ -57,19 +60,21 @@ class Generator():
         self.fuzz_path = "http://127.0.0.1:{}/fuzz".format(self.port)
         self.save_path = "http://127.0.0.1:{}/save".format(self.port)
 
-    def save(self):
-        pass
-
     def check(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(5)
+        ret = False
         try:
             sock.connect(("127.0.0.1", self.port))
-            return True
+            ret = True
         except:
-            return False
+            ret = False
+        finally:
+            sock.close()
+        return ret
 
-    def run(self):
+    def run(self): 
         handler = partial(MyHttpRequestHandler, self.template)
         self.httpd = ThreadingHttpServer((self.host, self.port), handler)
+        #self.httpd = HTTPServer((self.host, self.port), handler)
         self.httpd.serve_forever()
