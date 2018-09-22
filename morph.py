@@ -1,5 +1,6 @@
 import argparse
 import importlib
+import json
 
 def signals():
     print('''
@@ -13,20 +14,19 @@ def signals():
                                           Morph - Version 0.4.0
     ''')
 
-def morph(fuzzer, generator, template):
+def morph(morpit):
+    with open(morpit) as f:
+        morpit = json.load(f)
 
-    fuzzer = importlib.import_module("fuzzers.{}".format(fuzzer))
-    fuzzer = fuzzer.Fuzzer(generator, template)
+    fuzzer = importlib.import_module(morpit["fuzzer"])
+    fuzzer = fuzzer.Fuzzer(morpit["argument"])
     fuzzer.run()
-
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--fuzzer', required=True, help="which fuzzer to fuzz.")
-    parser.add_argument('-g', '--generator', required=True, help="generator with templates.")
-    parser.add_argument('-t', '--template', required=True, help="which template generator to use.")
+    parser.add_argument('morpit', help="morpit json file.")
     args = parser.parse_args()
     signals()
-    morph(args.fuzzer, args.generator, args.template)
+    morph(args.morpit)
 

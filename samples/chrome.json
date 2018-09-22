@@ -1,0 +1,15 @@
+{
+    "fuzzer": "fuzzers.browser",
+    "argument":{
+        "proc_path": "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe",
+        "proc_name": "chrome.exe",
+        "proc_args": "--no-sandbox",
+        
+        "generator": "generators.web",
+        "template": "templates.domato",
+        "gflags": "monitors.windbg.gflags",
+        "debugger": "monitors.windbg.UserDebugger",
+
+        "fuzz_results_dir": "results"
+    }
+}

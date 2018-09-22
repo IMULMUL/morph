@@ -1,0 +1,15 @@
+{
+    "fuzzer": "fuzzers.browser",
+    "argument":{
+        "proc_path": "C:/Program Files/Internet Explorer/iexplore.exe",
+        "proc_name": "iexplore.exe",
+        "proc_args": "",
+        
+        "generator": "generators.web",
+        "template": "templates.domato",
+        "gflags": "monitors.windbg.gflags",
+        "debugger": "monitors.windbg.UserDebugger",
+
+        "fuzz_results_dir": "results"
+    }
+}

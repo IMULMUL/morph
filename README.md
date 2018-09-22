@@ -8,7 +8,7 @@
          \_/  \/  \_/\____/\_/   \_/   \_/  /_/
 
   By Walkerfuz of Taurus Security(https://github.com/walkerfuz)
-                                          Morph - Version 0.4.0
+                                          Morph - Version 0.4.1
 ```
 
 Morph is an open source fuzzing framework based python. 
@@ -25,7 +25,7 @@ It provides an automated way to fuzz brower, windows photo viewer, smb protocol,
 
 1. pip install comtypes.
 
-2. Download visual c++ redistributable 2012 and setup.
+2. **Download [Visual C++ Redistributable for Visual Studio 2012 Update 4](https://www.microsoft.com/en-us/download/details.aspx?id=30679) and setup.**
 3. Download morph and run.
 
 # Usages
@@ -33,8 +33,12 @@ It provides an automated way to fuzz brower, windows photo viewer, smb protocol,
 Fuzzing IE with domato template:
 
 ```bash
-python morph.py -f IE -g web -t domato
+python morph.py samples/chrome.json
 ```
+
+Attention:
+
+You have to run the script as Administrator. 
 
 # Precautions
 
@@ -45,30 +49,17 @@ When fuzzing Firefox, set below arguments in `about:config` firstly：
 | browser.safebrowsing.debug             | false |
 | browser.sessionstore.resume_from_crash | false |
 
-
-
-# Attentions
-
-[1] - In Win10x64:
-
-```
-AttributeError: module 'comtypes.gen.DbgEng' has no attribute 'DEBUG_ANY_ID'
-```
-
-fix:
-
-This is permission error in comtypes. You have to run the script as Administrator. 
-
 # Versions
 
-- v0.4.0 
-  - Redesigned the framework.
+- v0.4.1
+  - Fix `ConnectionResetError: [WinError 10054]` bug
+  -  Redesigned the framework with json config
 
 # Todo
 
-- [ ] develop TIFF target and template
-- [ ] support edge
-- [ ] support linux gdb.
+- [ ] [v0.5.0] develop file format
+- [ ] [v0.6.0] support edge
+- [ ] [...] support peach pits and linux gdb.
 
 # Thanks
 
@@ -79,4 +70,4 @@ Morph is reformed from Peach, Cisso-kitty.
 
 ------
 
-如果有什么bug或建议，请邮件联系walkerfuz#outlook.com。
+If there is any bug or suggestion, please contact to walkerfuz#outlook.com。
