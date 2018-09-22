@@ -57,9 +57,9 @@ When fuzzing Firefox, set below arguments in `about:config` firstly：
 
 # Todo
 
-- [ ] [v0.5.0] develop file format
-- [ ] [v0.6.0] support edge
-- [ ] [...] support peach pits and linux gdb.
+- [ ] [v0.5.0] develop file format and optimize domato template 2018/10/10
+- [ ] [v0.6.0] support edge 2018/10/30
+- [ ] [...] support peach pits and linux debugger.
 
 # Thanks
 
