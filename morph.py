@@ -11,7 +11,7 @@ def signals():
          \_/  \/  \_/\____/\_/   \_/   \_/  /_/
 
   By Walkerfuz of Taurus Security(https://github.com/walkerfuz)
-                                          Morph - Version 0.4.0
+                                          Morph - Version 0.4.1
     ''')
 
 def morph(morpit):

@@ -42,7 +42,13 @@ You have to run the script as Administrator.
 
 # Precautions
 
-When fuzzing Firefox, set below arguments in `about:config` firstly：
+1. When fuzzing IE, Internet Options --> Advanced, cancel below：
+
+- 启用自动崩溃恢复
+- 通过页面预测启用快速翻页
+- 在后台加载站点和内容以优化性能
+
+2. When fuzzing Firefox, set below arguments in `about:config` firstly：
 
 | toolkit.startup.max_resumed_crashes    | -1    |
 | :------------------------------------- | ----- |
@@ -57,8 +63,8 @@ When fuzzing Firefox, set below arguments in `about:config` firstly：
 
 # Todo
 
-- [ ] [v0.5.0] develop file format and optimize domato template 2018/10/10
-- [ ] [v0.6.0] support edge 2018/10/30
+- [ ] [v0.5.0] optimize domato template and support file format  2018/10/10
+- [ ] [v0.6.0] support Microsoft Edge 2018/10/30
 - [ ] [...] support peach pits and linux debugger.
 
 # Thanks

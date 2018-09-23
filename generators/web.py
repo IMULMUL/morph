@@ -38,7 +38,6 @@ class MyHttpRequestHandler(BaseHTTPRequestHandler):
                 response = self.fuzz_handler()
             elif self.path == "/save":
                 response = self.save_handler()
-                print("xxxxx")
             else:
                 return
 

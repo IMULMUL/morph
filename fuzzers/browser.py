@@ -47,22 +47,23 @@ class Fuzzer():
         if not self.monitor.crash_name or not self.monitor.crash_description:
             return
 
-        # TODO: confirm twice
-        # self.confirm.run("{} {} {}".format(self.proc_path, self.proc_args, self.generator.save_path))
-        # if not self.confirm.crash_name or not self.confirm.crash_description:
-        #     return
+        # Confirm twice
+        self.confirm.run("{} {} {}".format(self.proc_path, self.proc_args, self.generator.save_path))
+        if not self.confirm.crash_name or not self.confirm.crash_description:
+            print("[-] Ops: Can not confirm twice of  crash {}.".format(self.monitor.crash_name))
+            return
         print("[+] Status: Crash is confirmed, saving...")
+        
         # save to file
         try:
             crash_data = (urllib.request.urlopen(self.generator.save_path).read()).decode('utf-8')
         except Exception as e:
-            print(e)
-            print("[-]:Get Crash data %s from %s is failed." % (self.monitor.crash_name, self.generator.save_path))
+            print("[-]:Get Crash data %s from %s is failed." % (self.confirm.crash_name, self.generator.save_path))
             return
-        result_name = os.path.join(self.result_dir, "{}.html".format(self.monitor.crash_name))
+        result_name = os.path.join(self.result_dir, "{}.html".format(self.confirm.crash_name))
         with open(result_name, "wb") as fw:
             fw.write(crash_data.encode("utf-8"))
-        print("[+] Status: Finded crash %s and saved successfully." % (self.monitor.crash_name))           
+        print("[+] Status: Finded crash %s and saved successfully." % (self.confirm.crash_name))           
 
     def run(self):
         self.start_generator()
