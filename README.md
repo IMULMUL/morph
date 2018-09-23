@@ -1,17 +1,8 @@
 # Morph
 
-```
-            __________              ____  __    __
-           /  __  __  \____  ____  / __ \/ /   / /
-          /  / / / /  / __ \/  __\/ /_/ / /___/ /
-         /  / / / /  / /_/ /  /  /  ___/  ___  /
-         \_/  \/  \_/\____/\_/   \_/   \_/  /_/
-
-  By Walkerfuz of Taurus Security(https://github.com/walkerfuz)
-                                          Morph - Version 0.4.1
-```
-
 Morph is an open source fuzzing framework based python. 
+
+![](./morph.png)
 
 It provides an automated way to fuzz brower, windows photo viewer, smb protocol, dll, etc. You can create any templates like domato, tiff, avi format for everything you want to fuzz.
 
@@ -33,7 +24,7 @@ It provides an automated way to fuzz brower, windows photo viewer, smb protocol,
 Fuzzing IE with domato template:
 
 ```bash
-python morph.py samples/chrome.json
+python morph.py samples/ie.json
 ```
 
 Attention:
