@@ -67,7 +67,7 @@ class Fuzzer():
 
     def run(self):
         self.start_generator()
-        while True:
+        while 1:
             p_b = multiprocessing.Process(target=self.fuzz)
             p_b.start()
             p_b.join(300)

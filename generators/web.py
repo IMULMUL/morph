@@ -1,5 +1,4 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from socketserver import ThreadingMixIn
 from functools import partial
 import random
 import socket
@@ -10,8 +9,7 @@ fuzz_data_backup = None
 class MyHttpRequestHandler(BaseHTTPRequestHandler):
 
     def __init__(self, template, *args, **kwargs):
-        template = importlib.import_module(template)
-        self.template = template.Template()
+        self.template = template
         # Resolved ConnectionResetError: [WinError 10054] 
         try:
             super().__init__(*args, **kwargs)
@@ -20,7 +18,7 @@ class MyHttpRequestHandler(BaseHTTPRequestHandler):
 
     # override log_message
     def log_message(self, format, *args):
-        pass     
+        pass
     
     def fuzz_handler(self):
         global fuzz_data_backup
@@ -29,6 +27,7 @@ class MyHttpRequestHandler(BaseHTTPRequestHandler):
         return fuzz_data
     
     def save_handler(self):
+        global fuzz_data_backup
         return fuzz_data_backup
 
     # GET
@@ -46,18 +45,17 @@ class MyHttpRequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(response.encode("utf-8"))
         except:
-            pass            
-
-class ThreadingHttpServer(ThreadingMixIn, HTTPServer):
-    pass
+            pass
 
 class Generator():
     def __init__(self, template):
         self.host = "127.0.0.1"
-        self.template = template
         self.port = random.randint(10000, 60000)
         self.fuzz_path = "http://127.0.0.1:{}/fuzz".format(self.port)
         self.save_path = "http://127.0.0.1:{}/save".format(self.port)
+
+        template = importlib.import_module(template)
+        self.template = template.Template()
 
     def check(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -74,6 +72,5 @@ class Generator():
 
     def run(self): 
         handler = partial(MyHttpRequestHandler, self.template)
-        self.httpd = ThreadingHttpServer((self.host, self.port), handler)
-        #self.httpd = HTTPServer((self.host, self.port), handler)
+        self.httpd = HTTPServer((self.host, self.port), handler)
         self.httpd.serve_forever()
