@@ -10,7 +10,7 @@ class Fuzzer():
 
     def __init__(self, morpit):
 
-        # TODO: Check morpit is valid or not
+        # TODO: Check all morpit arguments are valid or not
         self.proc_path = morpit["proc_path"]
         self.proc_name = morpit["proc_name"]
         self.proc_args = morpit["proc_args"]
@@ -26,9 +26,6 @@ class Fuzzer():
         self.monitor = debugger.Debugger()
         self.confirm = debugger.Debugger()
 
-        if not os.path.exists(morpit["fuzz_results_dir"]):
-            print("[-] Error: Reuslt Directory {} is not existed.".format(morpit["fuzz_results_dir"]))
-            exit(-1)
         self.result_dir = morpit["fuzz_results_dir"]
 
     def start_generator(self):
@@ -41,12 +38,31 @@ class Fuzzer():
             print("[-] Warning: Generator 127.0.0.1:{} is not opened, wait or check.".format(self.generator.port))
         print("[+] Status: Generator 127.0.0.1:{} is running.".format(self.generator.port))
 
-    def fuzz(self):
-
-        self.monitor.run("{} {}".format(self.proc_path, self.generator.fuzz_path))
-        if not self.monitor.crash_name or not self.monitor.crash_description:
+    def save_crash(self):
+        crash_name = "{}_{}.html".format(self.proc_name, self.confirm.crash_name)
+        try:
+            crash_data = (urllib.request.urlopen(self.generator.save_path).read()).decode('utf-8')
+            if self.result_dir.startswith("http://"):
+                post_data = {'file_name': crash_name, 'file_content': crash_data}
+                post_data = urllib.parse.urlencode(post_data).encode("utf-8")
+                req = urllib.request.Request(url=self.result_dir, data=post_data)
+                urllib.request.urlopen(req)
+            else:
+                with open(os.path.join(self.result_dir, crash_name), "wb") as fw:
+                    fw.write(crash_data.encode("utf-8"))
+        except Exception as e:
+            print("[-] Error: {} when saving {} to {}.".format(repr(e), self.confirm.crash_name, self.generator.save_path))
             return
 
+        print("[+] Status: Finded crash %s and saved successfully." % (self.confirm.crash_name))  
+
+    def fuzz(self):
+
+        self.monitor.run("{} {} {}".format(self.proc_path, self.proc_args, self.generator.fuzz_path))
+        if not self.monitor.crash_name or not self.monitor.crash_description:
+            return
+        print("[+] Status: Confirming crash {}...".format(self.monitor.crash_name))
+        
         # Confirm twice
         self.confirm.run("{} {} {}".format(self.proc_path, self.proc_args, self.generator.save_path))
         if not self.confirm.crash_name or not self.confirm.crash_description:
@@ -55,20 +71,13 @@ class Fuzzer():
         print("[+] Status: Crash is confirmed, saving...")
         
         # save to file
-        try:
-            crash_data = (urllib.request.urlopen(self.generator.save_path).read()).decode('utf-8')
-        except Exception as e:
-            print("[-]:Get Crash data %s from %s is failed." % (self.confirm.crash_name, self.generator.save_path))
-            return
-        result_name = os.path.join(self.result_dir, "{}.html".format(self.confirm.crash_name))
-        with open(result_name, "wb") as fw:
-            fw.write(crash_data.encode("utf-8"))
-        print("[+] Status: Finded crash %s and saved successfully." % (self.confirm.crash_name))           
+        self.save_crash()
+         
 
     def run(self):
         self.start_generator()
         while 1:
             p_b = multiprocessing.Process(target=self.fuzz)
             p_b.start()
-            p_b.join(300)
+            p_b.join(120)
             p_b.terminate()

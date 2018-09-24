@@ -15,21 +15,77 @@ It provides an automated way to fuzz brower, windows photo viewer, smb protocol,
 ## Install
 
 1. pip install comtypes.
-
-2. **Download [Visual C++ Redistributable for Visual Studio 2012 Update 4](https://www.microsoft.com/en-us/download/details.aspx?id=30679) and setup.**
-3. Download morph and run.
+2. [Optional when using center.py] pip install tornado
+3. **Download [Visual C++ Redistributable for Visual Studio 2012 Update 4](https://www.microsoft.com/en-us/download/details.aspx?id=30679) and setup.**
+4. Download morph and run.
 
 # Usages
 
+### 0x01. fuzzing only at local machine:
+
 Fuzzing IE with domato template:
+
+1. Setting samples/ie.json:
+
+```
+{
+    "fuzzer": "fuzzers.browser",
+    "argument":{
+        "proc_path": "C:/Program Files/Internet Explorer/iexplore.exe",
+        "proc_name": "iexplore.exe",
+        "proc_args": "",
+        
+        "generator": "generators.web",
+        "template": "templates.domato",
+        "gflags": "monitors.windbg.gflags",
+        "debugger": "monitors.windbg.UserDebugger",
+
+        "fuzz_results_dir": "results"
+    }
+}
+```
+
+2. Then run the script as Administrator:
 
 ```bash
 python morph.py samples/ie.json
 ```
 
-Attention:
+### 0x02. fuzzing and saving results to Remote Server:
 
-You have to run the script as Administrator. 
+1. setting samples/ie.json:
+
+```
+{
+    "fuzzer": "fuzzers.browser",
+    "argument":{
+        "proc_path": "C:/Program Files/Internet Explorer/iexplore.exe",
+        "proc_name": "iexplore.exe",
+        "proc_args": "",
+        
+        "generator": "generators.web",
+        "template": "templates.domato",
+        "gflags": "monitors.windbg.gflags",
+        "debugger": "monitors.windbg.UserDebugger",
+
+        "fuzz_results_dir": "http://192.168.1.200:8080/upload"
+    }
+}
+```
+
+2. Then run center.py in Remote server 192.168.1.200:
+
+```
+python center.py 8080
+```
+
+3. And run morph script as Administrator in client machine:
+
+```bash
+python morph.py samples/ie.json
+```
+
+All results saved to `results` directory.
 
 # Precautions
 
@@ -48,6 +104,8 @@ You have to run the script as Administrator.
 
 # Versions
 
+- v0.4.2
+  - Add center.py to save results remotely.
 - v0.4.1
   - Fix `ConnectionResetError: [WinError 10054]` bug
   -  Redesigned the framework with json config
