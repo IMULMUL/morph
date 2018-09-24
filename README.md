@@ -21,9 +21,9 @@ It provides an automated way to fuzz brower, windows photo viewer, smb protocol,
 
 # Usages
 
-### 0x01. fuzzing only at local machine:
-
 Fuzzing IE with domato template:
+
+### 0x01. fuzzing only at local machine:
 
 1. Setting samples/ie.json:
 
