@@ -66,10 +66,15 @@ runcount["eventhandler5"]++; if(runcount["eventhandler5"] > 2) { return; }
 <jsfuzzer>
 
 }
-window.location.reload(true);
+
+function domato_fuzzer(){
+  jsfuzzer();
+  window.location.reload(true);
+}
+
 </script>
 </head>
-<body onload=jsfuzzer()>
+<body onload=domato_fuzzer()>
 <!--beginhtml--><htmlfuzzer><!--endhtml-->
 </body>
 </html>
