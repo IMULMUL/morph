@@ -27,6 +27,8 @@ class Debugger:
         self.crash_description = None
 
     def run(self, proc_args, follow_forks=True):
+        self.crash_name = None
+        self.crash_description = None
         proc_args = proc_args.encode("ascii", "ignore")
         self.event_handler.follow_forks = follow_forks
         self.dbg = ProcessCreator(command_line = proc_args,
