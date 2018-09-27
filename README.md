@@ -91,16 +91,23 @@ All results saved to `results` directory.
 
 1. When fuzzing IE, Internet Options --> Advanced, cancel below：
 
-- 启用自动崩溃恢复
-- 通过页面预测启用快速翻页
-- 在后台加载站点和内容以优化性能
+- [ ] 启用自动崩溃恢复
+
+- [ ] 通过页面预测启用快速翻页
+
+- [ ] 在后台加载站点和内容以优化性能
+
+and In Internet Options --> Security, cancel:
+
+- [ ] 启用保护模式
 
 2. When fuzzing Firefox, set below arguments in `about:config` firstly：
 
-| toolkit.startup.max_resumed_crashes    | -1    |
-| :------------------------------------- | ----- |
-| browser.safebrowsing.debug             | false |
-| browser.sessionstore.resume_from_crash | false |
+| toolkit.startup.max_resumed_crashes      | -1    |
+| :--------------------------------------- | ----- |
+| browser.safebrowsing.debug               | false |
+| browser.sessionstore.max_resumed_crashes | -1    |
+| browser.sessionstore.resume_from_crash   | false |
 
 # Versions
 
