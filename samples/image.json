@@ -1,0 +1,17 @@
+{
+    "fuzzer": "fuzzers.file",
+    "argument":{
+        "proc_path": "C:\\Windows\\System32\\rundll32.exe ",
+        "proc_name": "rundll32.exe",
+        "proc_args": "\"C:\\Program Files\\Windows Photo Viewer\\PhotoViewer.dll\", ImageView_Fullscreen",
+        
+        "generator": "generators.file",
+        "template": "templates/tiff.xml",
+        "gflags": "monitors.windbg.gflags",
+        "debugger": "monitors.windbg.UserDebugger",
+
+        "timeout": 2,
+
+        "fuzz_results_dir": "results"
+    }
+}
