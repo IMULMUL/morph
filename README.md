@@ -40,6 +40,8 @@ Fuzzing IE with domato template:
         "gflags": "monitors.windbg.gflags",
         "debugger": "monitors.windbg.UserDebugger",
 
+        "fuzz_timeout": 120,
+        "confirm_timeout": 10,
         "fuzz_results_dir": "results"
     }
 }
@@ -68,6 +70,8 @@ python morph.py samples/ie.json
         "gflags": "monitors.windbg.gflags",
         "debugger": "monitors.windbg.UserDebugger",
 
+        "fuzz_timeout": 120,
+        "confirm_timeout": 10,
         "fuzz_results_dir": "http://192.168.1.200:8080/upload"
     }
 }
@@ -111,8 +115,11 @@ and In Internet Options --> Security, cancel:
 
 # Versions
 
+- v0.4.3
+  - Fix multiprocess share object bug
+  - Add Software based file format support
 - v0.4.2
-  - Add center.py to save results remotely.
+  - Add center.py to save results remotely
 - v0.4.1
   - Fix `ConnectionResetError: [WinError 10054]` bug
   -  Redesigned the framework with json config
