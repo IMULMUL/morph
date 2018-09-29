@@ -26,20 +26,18 @@ class MyHttpRequestHandler(BaseHTTPRequestHandler):
         fuzz_data_backup = fuzz_data.replace("window.location.reload(true);", "")
         return fuzz_data
     
-    def save_handler(self):
-        global fuzz_data_backup
+    def confirm_handler(self):
         return fuzz_data_backup
 
     # GET
     def do_GET(self):
+        if self.path == "/confirm":
+            response = self.confirm_handler()
+        elif self.path == "/fuzz":
+            response = self.fuzz_handler()
+        else:
+            return        
         try:
-            if self.path == "/fuzz":
-                response = self.fuzz_handler()
-            elif self.path == "/save":
-                response = self.save_handler()
-            else:
-                return
-
             self.send_response(200)
             self.send_header("Content-type", "text/html; charset=utf-8")
             self.end_headers()
@@ -52,7 +50,7 @@ class Generator():
         self.host = "127.0.0.1"
         self.port = random.randint(10000, 60000)
         self.fuzz_path = "http://127.0.0.1:{}/fuzz".format(self.port)
-        self.save_path = "http://127.0.0.1:{}/save".format(self.port)
+        self.confirm_path = "http://127.0.0.1:{}/confirm".format(self.port)
 
         template = importlib.import_module(template)
         self.template = template.Template()
@@ -60,15 +58,11 @@ class Generator():
     def check(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(5)
-        ret = False
         try:
             sock.connect(("127.0.0.1", self.port))
-            ret = True
+            return True
         except:
-            ret = False
-        finally:
-            sock.close()
-        return ret
+            return False
 
     def run(self): 
         handler = partial(MyHttpRequestHandler, self.template)

@@ -10,6 +10,8 @@
         "gflags": "monitors.windbg.gflags",
         "debugger": "monitors.windbg.UserDebugger",
 
+        "fuzz_timeout": 120,
+        "confirm_timeout": 10,
         "fuzz_results_dir": "results"
     }
 }

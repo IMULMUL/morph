@@ -1,4 +1,6 @@
+import multiprocessing
 from .DebugEventHandler import *
+
 
 class Debugger:
     def __init__(self):
@@ -20,16 +22,16 @@ class Debugger:
         self.event_handler.handledFault = self.handledFault
         self.event_handler.IgnoreFirstChanceGardPage = False
         self.event_handler.IgnoreSecondChanceGardPage = False
-        self.event_handler.crash_name = None
-        self.event_handler.crash_description = None
+        self.event_handler.crash_name = ''
+        self.event_handler.crash_description = ''
 
-        self.crash_name = None
-        self.crash_description = None
+        self.crash_name = multiprocessing.Array('c', 512)
+        self.crash_description = multiprocessing.Array('c', 65535)
 
     def run(self, proc_args, follow_forks=True):
-        self.crash_name = None
-        self.crash_description = None
         proc_args = proc_args.encode("ascii", "ignore")
+        self.crash_name.value = b''
+        self.crash_description.value = b''
         self.event_handler.follow_forks = follow_forks
         self.dbg = ProcessCreator(command_line = proc_args,
             follow_forks = follow_forks,
@@ -40,5 +42,5 @@ class Debugger:
         self.started.set()
         self.dbg.event_loop_with_quit_event(self.quit)
         # when event handler loop is over
-        self.crash_name = self.event_handler.crash_name
-        self.crash_description = self.event_handler.crash_description
+        self.crash_name.value = self.event_handler.crash_name.encode("utf-8")
+        self.crash_description.value = self.event_handler.crash_description.encode("utf-8")
