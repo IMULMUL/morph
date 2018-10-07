@@ -8,8 +8,6 @@ from .google_domato.grammar import Grammar
 class Template():
 
     def __init__(self):
-        #self.domato = importlib.import_module("templates.google_domato.generator")
-
         grammar_dir = os.path.join(os.path.dirname(__file__), "google_domato")
         f = open(os.path.join(grammar_dir, 'template.html'))
         self.template = f.read()

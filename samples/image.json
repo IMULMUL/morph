@@ -6,7 +6,7 @@
         "proc_args": "\"C:\\Program Files\\Windows Photo Viewer\\PhotoViewer.dll\", ImageView_Fullscreen",
         
         "generator": "generators.file",
-        "template": "templates/tiff.xml",
+        "template": "templates.tiff",
         "gflags": "monitors.windbg.gflags",
         "debugger": "monitors.windbg.UserDebugger",
 
