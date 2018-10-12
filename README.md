@@ -101,9 +101,16 @@ All results saved to `results` directory.
 
 - [ ] 在后台加载站点和内容以优化性能
 
-and In Internet Options --> Security, cancel:
+In Internet Options --> Security, cancel:
 
 - [ ] 启用保护模式
+
+Change iexplore.exe to Alone Process mode in `regedit` table:
+
+```
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main
+```
+Create a new DWORD32 `TabProcGrowth` and set to 0.
 
 2. When fuzzing Firefox, set below arguments in `about:config` firstly：
 
