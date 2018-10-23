@@ -1,5 +1,19 @@
 import random
 
+
+class String(object):
+    def __init__(self, name=None, value='', select=[], reference=None, mutable=True):
+        self.value=value
+        self.mutable = mutable
+        self.select = select
+
+    def random(self):
+        if self.mutable is False:
+            return self.value.encode(encoding="utf-8")
+        if len(self.select) > 0:
+            return random.choice(self.select)
+        return 
+
 class int32(object):
 
     def __init__(self, name=None, value=0, min=-2147483648, max=2147483647, select=[], reference=None, mutable=True, littleEndian=True):
@@ -34,10 +48,28 @@ class int32(object):
 
 
 class Block(object):
-    pass
+    def __init__(self, blocks=None):
+        if blocks is None:
+            self.blocks = []
+        else:
+            self.blocks = blocks
+    
+    def random(self):
+        data = b''
+        for block in self.blocks:
+            data += block.random()
+        return data
 
 class Choice(object):
     pass
 
 class Repeater(object):
     pass
+
+ggg = Block(blocks = [
+    int32(min=1, max=10),
+    int32(min=1, max=10),
+    int32(min=1, max=10)
+])
+
+print(ggg.random())
