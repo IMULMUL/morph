@@ -6,6 +6,8 @@ Morph is an open source fuzzing framework based python.
 
 It provides an automated way to fuzz brower, windows photo viewer, smb protocol, dll, etc. You can create any templates like domato, tiff, avi format for everything you want to fuzz.
 
+[flag] version 0.5.0 before 2020/03/31 to support file format software fuzzing like dox, zip, avi, jpeg and protocol server fuzzing like ftp or smtpd fuzzing and supprot linux both.
+
 # Features
 
 * Support multiple browsers, such as IE, Chrome, Firefox, etc. Edge is considering.
@@ -133,9 +135,11 @@ Create a new DWORD32 `TabProcGrowth` and set to 0.
 
 # Todo
 
-- [ ] [v0.5.0] optimize domato template and support file format  2018/10/10
-- [ ] [v0.6.0] support Microsoft Edge 2018/10/30
-- [ ] [...] support peach pits and linux debugger.
+- [ ] support file format generator like peach pits.
+- [ ] support linux debugger.
+- [ ] supprot protocol fuzzing.
+- [ ] support MiTM proto fuzzing.
+- [ ] support Microsoft Edge.
 
 # Thanks
 
