@@ -6,7 +6,9 @@ Morph is an open source fuzzing framework based python.
 
 It provides an automated way to fuzz brower, windows photo viewer, smb protocol, dll, etc. You can create any templates like domato, tiff, avi format for everything you want to fuzz.
 
-[flag] version 0.5.0 before 2020/03/31 to support file format software fuzzing like dox, zip, avi, jpeg and protocol server fuzzing like ftp or smtpd fuzzing and supprot linux both.
+`flag` version 0.5.0 before 2020/03/31 to support file format software fuzzing like doc, zip, avi, jpeg and protocol server fuzzing like ftp or smtpd fuzzing and supprot linux debugger.
+
+Hold The Door.
 
 # Features
 
